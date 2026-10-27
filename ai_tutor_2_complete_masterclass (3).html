@@ -1,0 +1,2531 @@
+<!DOCTYPE html>
+<html lang="hi" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Tutor 2 - संपूर्ण Data Analyst, Data Engineer, Data Scientist & AI Roadmap Masterclass</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google Fonts: Inter & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Pyodide Engine for In-Browser Python (Zero API Key needed) -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+
+  <!-- Canvas Confetti for Celebration on Correct Answers -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style id="custom-theme-styles">
+    :root {
+      --bg-main: #020617;
+      --bg-panel: #0f172a;
+      --bg-header: #090d16;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-color: #f59e0b;
+      --card-bg: #1e293b;
+      --board-bg: #0d221a;
+      --app-font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main) !important;
+      color: var(--text-main) !important;
+      font-family: var(--app-font-family) !important;
+    }
+
+    .themed-panel {
+      background-color: var(--bg-panel) !important;
+      color: var(--text-main) !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .themed-card {
+      background-color: var(--card-bg) !important;
+    }
+
+    .themed-header {
+      background-color: var(--bg-header) !important;
+    }
+
+    .themed-text {
+      color: var(--text-main) !important;
+    }
+
+    .themed-muted {
+      color: var(--text-muted) !important;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.35); }
+
+    /* Live On-Air Pulse */
+    @keyframes live-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.9); }
+    }
+    .live-dot {
+      animation: live-pulse 1.4s infinite ease-in-out;
+    }
+
+    /* Sound Wave Animation */
+    @keyframes sound-wave {
+      0%, 100% { height: 4px; }
+      50% { height: 18px; }
+    }
+    .wave-pulse {
+      width: 3px;
+      background-color: var(--accent-color);
+      border-radius: 2px;
+      display: inline-block;
+      margin: 0 1.5px;
+      animation: sound-wave 0.8s infinite ease-in-out;
+    }
+    .wave-pulse:nth-child(2) { animation-delay: 0.15s; }
+    .wave-pulse:nth-child(3) { animation-delay: 0.3s; }
+    .wave-pulse:nth-child(4) { animation-delay: 0.45s; }
+
+    /* Word Highlighter for Live Speech */
+    .word-spoken {
+      background-color: var(--accent-color);
+      color: #020617 !important;
+      padding: 0 4px;
+      border-radius: 4px;
+      transition: background-color 0.15s ease;
+      font-weight: 800;
+    }
+
+    /* Glowing Focus Effect for Question Box */
+    .question-hero-box {
+      border: 2px solid #3b82f6;
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.25), inset 0 0 15px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Software Simulation Tabs */
+    .sim-tab-active {
+      background-color: rgba(245, 158, 11, 0.2) !important;
+      color: #fbbf24 !important;
+      border-bottom: 2px solid #f59e0b !important;
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col font-sans overflow-hidden">
+
+  <!-- ================= TOP HEADER: CLASSROOM NAVIGATION ================= -->
+  <header class="h-14 themed-header border-b border-slate-800 px-3 md:px-5 flex items-center justify-between shrink-0 z-30">
+    <div class="flex items-center space-x-3">
+      <!-- Live Classroom Branding -->
+      <div class="flex items-center space-x-2.5 cursor-pointer" onclick="triggerFacultyWelcome()">
+        <span class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 font-black text-sm shadow">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </span>
+        <div class="leading-none">
+          <div class="flex items-center space-x-1.5">
+            <span class="text-white font-extrabold text-sm md:text-base tracking-wide">Data & AI <span class="text-amber-400">Engineer Academy</span></span>
+            <span class="px-1.5 py-0.5 rounded bg-rose-600 text-white text-[9px] font-black uppercase flex items-center space-x-1 shadow">
+              <span class="w-1.5 h-1.5 rounded-full bg-white live-dot"></span>
+              <span>LIVE 24/7</span>
+            </span>
+          </div>
+          <span class="text-[10px] themed-muted font-medium">Data Analyst • Data Scientist • Data Engineer • AI Systems (3,000 Questions / Ch)</span>
+        </div>
+      </div>
+
+      <!-- Quick Audio Indicator -->
+      <div id="global-speech-indicator" class="hidden items-center space-x-1 bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-md text-[11px] border border-amber-500/40">
+        <span class="wave-pulse"></span>
+        <span class="wave-pulse"></span>
+        <span class="wave-pulse"></span>
+        <span class="wave-pulse"></span>
+        <span class="ml-1 text-[11px] font-bold">मैम समझा रही हैं...</span>
+        <button onclick="stopAllSpeech()" class="ml-2 text-rose-400 hover:text-rose-300" title="आवाज़ रोकें">
+          <i class="fa-solid fa-circle-stop"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Controls: Track Selector + Theme + Help + XP + Profile -->
+    <div class="flex items-center space-x-2">
+      <!-- Complete Course Track Selector -->
+      <select id="main-track-select" onchange="switchTrack(this.value)" class="bg-slate-800 text-amber-300 font-semibold border border-slate-700 rounded-lg px-2.5 py-1 text-xs focus:ring-2 focus:ring-amber-400 max-w-[190px] sm:max-w-xs md:max-w-sm truncate shadow-sm">
+        <optgroup label="📊 7 Months Data Analyst Roadmap">
+          <option value="da_excel" selected>📊 1. Data Analyst: Complete Excel (9 Modules)</option>
+          <option value="da_sql">🗄️ 2. Data Analyst: Complete SQL Mastery (10 Modules)</option>
+          <option value="da_python">🐍 3. Data Analyst: Python for Data Analysis (10 Modules)</option>
+          <option value="da_stats">📈 4. Data Analyst: Business Statistics & EDA (10 Modules)</option>
+          <option value="da_powerbi">📉 5. Data Analyst: Power BI & Dashboards (10 Modules)</option>
+          <option value="da_projects">🏆 6. Data Analyst: End-to-End Capstone Portfolio (10 Modules)</option>
+        </optgroup>
+        <optgroup label="💼 Professional Accounting & ERP">
+          <option value="accounting">💼 7. Accounting, Tally Prime 5.0, GST & Forensic Audit (24 Modules)</option>
+        </optgroup>
+        <optgroup label="🔬 Data Science & Machine Learning">
+          <option value="ds_scientist">🔬 8. Data Scientist Roadmap (12 Modules)</option>
+          <option value="ds_engineer">⚙️ 9. Data Engineer Roadmap (12 Modules)</option>
+          <option value="ai_engineer_fast">🧠 10. AI & ML Engineer Fast-Track (12 Modules)</option>
+        </optgroup>
+        <optgroup label="🚀 Full AI Engineer (Complete 6 Stages)">
+          <option value="ai_stage1">★ 11. AI Eng: Python & Software Core (12 Modules)</option>
+          <option value="ai_stage2">★ 12. AI Eng: Math, Stats & Probability (12 Modules)</option>
+          <option value="ai_stage3">★ 13. AI Eng: Machine Learning Core (12 Modules)</option>
+          <option value="ai_stage4">★ 14. AI Eng: Deep Learning & Neural Nets (12 Modules)</option>
+          <option value="ai_stage5">★ 15. AI Eng: Generative AI, LLMs & RAG (13 Modules)</option>
+          <option value="ai_stage6">★ 16. AI Eng: System Design & Production AI (13 Modules)</option>
+        </optgroup>
+        <optgroup label="🌐 Languages & Systems Tracks">
+          <option value="contentwriting">17. Content Writing, Copywriting & Storytelling (10 Modules)</option>
+          <option value="python">18. Python & LeetCode (30 Chapters - Basic to Adv)</option>
+          <option value="sap">19. SAP ERP & ABAP/HANA (12 Chapters)</option>
+          <option value="animation">20. 2D & 3D Animated Video Making (12 Chapters)</option>
+          <option value="cpp">21. C++ OOP, STL & CP (12 Chapters)</option>
+          <option value="c">22. C Language Core & Systems (10 Chapters)</option>
+          <option value="java">23. Java Enterprise Masterclass (12 Chapters)</option>
+          <option value="webdesign">24. Web Designing & UI/UX (12 Chapters)</option>
+          <option value="scraping">25. Web Scraping & Automation (10 Chapters)</option>
+          <option value="aivideo">26. AI & AI Video Generation (12 Chapters)</option>
+          <option value="linux">27. Linux & Kali Linux Cyber (12 Chapters)</option>
+        </optgroup>
+      </select>
+
+      <!-- THEME CUSTOMIZER BUTTON -->
+      <button onclick="toggleThemeModal()" class="px-2.5 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs rounded-lg border border-purple-400/40 flex items-center space-x-1.5 shadow transition transform hover:scale-105" title="थीम और रंग बदलें">
+        <i class="fa-solid fa-palette text-amber-300"></i>
+        <span class="hidden sm:inline">रंग बदलें</span>
+      </button>
+
+      <!-- 24/7 UNIVERSAL HELP & DOUBT SOLVER BUTTON -->
+      <button onclick="toggleUniversalHelpModal()" class="px-2.5 py-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs rounded-lg border border-emerald-400/40 flex items-center space-x-1.5 shadow transition transform hover:scale-105" title="24/7 सहायता एवं डाउट सॉल्वर">
+        <i class="fa-solid fa-circle-question text-amber-300"></i>
+        <span class="hidden sm:inline">24/7 सहायता (Help)</span>
+      </button>
+
+      <!-- Gamified Student XP & Streak Badge -->
+      <div class="hidden lg:flex items-center space-x-2 bg-slate-900 border border-slate-700 px-2.5 py-1 rounded-lg text-xs font-mono">
+        <span class="text-amber-400 flex items-center space-x-1" title="लगातार सीखने का स्ट्रीक">
+          <i class="fa-solid fa-fire text-orange-500"></i>
+          <span id="streak-counter">3 Day Streak</span>
+        </span>
+        <span class="text-slate-500">•</span>
+        <span class="text-emerald-400 font-bold flex items-center space-x-1" title="कुल अर्जित XP">
+          <i class="fa-solid fa-trophy text-amber-400 text-[10px]"></i>
+          <span id="user-xp-score">350 XP</span>
+        </span>
+      </div>
+
+      <!-- Language Toggle -->
+      <div class="flex bg-slate-800 rounded-lg p-0.5 border border-slate-700 text-xs font-semibold">
+        <button id="lang-btn-hi" onclick="setAppLanguage('hi')" class="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 font-bold shadow">हिंदी</button>
+        <button id="lang-btn-en" onclick="setAppLanguage('en')" class="px-2 py-0.5 rounded-md text-slate-300 hover:text-white">EN</button>
+      </div>
+
+      <!-- Personalized Student Name Profile -->
+      <button onclick="promptChangeLearnerName()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 font-medium text-xs rounded-lg border border-slate-700 flex items-center space-x-1 shadow-sm" title="अपना नाम बदलें">
+        <i class="fa-solid fa-user-graduate text-amber-400 text-xs"></i>
+        <span id="header-user-display">दीपक जी</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= SUB-NAVIGATION BAR: MODULES & 3,000 QUESTIONS TRACKER ================= -->
+  <div class="themed-panel px-3 md:px-5 py-2 flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 text-xs shrink-0">
+    <div class="flex items-center space-x-2">
+      <span class="themed-muted font-bold">मॉड्यूल / विषय:</span>
+      <select id="chapter-dropdown" onchange="onChapterSelect(parseInt(this.value))" class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-100 font-medium text-xs max-w-[260px] md:max-w-md truncate focus:outline-none focus:border-amber-400">
+        <!-- Chapters populated dynamically by JS -->
+      </select>
+      <button onclick="speakCurrentChapterTheory()" class="text-amber-400 hover:text-amber-300 text-xs font-bold flex items-center space-x-1.5 bg-slate-800 px-3 py-1 rounded-lg border border-slate-700 shadow-sm transition" title="पूरी क्लास का लेक्चर बोलकर सुनें">
+        <i class="fa-solid fa-volume-high text-xs"></i>
+        <span>क्लास सुनें</span>
+      </button>
+    </div>
+
+    <!-- 3,000 Questions Tracker & Question Matrix Trigger -->
+    <div class="flex items-center space-x-2">
+      <span class="themed-muted font-bold">सवाल (1-3000):</span>
+      <input type="number" id="quick-q-input" min="1" max="3000" value="1" onchange="jumpToDirectQuestion(this.value)" class="w-16 bg-slate-950 border border-slate-700 rounded-lg px-1.5 py-1 text-amber-300 font-mono text-center text-xs font-bold focus:outline-none focus:border-amber-400" title="1 से 3000 तक कोई भी सवाल सीधे टाइप करें">
+
+      <select id="question-dropdown" onchange="onQuestionSelect(parseInt(this.value))" class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-100 font-mono text-xs max-w-[130px] md:max-w-xs focus:outline-none focus:border-amber-400">
+        <!-- Progressive range options populated dynamically -->
+      </select>
+
+      <div class="flex items-center space-x-1">
+        <button id="btn-prev-q" onclick="stepQuestion(-1)" class="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-800 hover:bg-slate-700 text-white disabled:opacity-40 transition shadow" title="पिछला सवाल">
+          <i class="fa-solid fa-chevron-left text-[11px]"></i>
+        </button>
+        <button id="btn-next-q" onclick="stepQuestion(1)" class="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-800 hover:bg-slate-700 text-white disabled:opacity-40 transition shadow" title="अगला सवाल">
+          <i class="fa-solid fa-chevron-right text-[11px]"></i>
+        </button>
+      </div>
+
+      <!-- Question Drawer / Matrix Button -->
+      <button onclick="toggleQuestionDrawer()" class="px-2.5 py-1 bg-blue-600/30 hover:bg-blue-600/50 text-blue-300 border border-blue-500/50 rounded-lg font-bold text-xs flex items-center space-x-1 transition shadow" title="3,000 सवालों का पूरा इंडेक्स ग्रिड खोलें">
+        <i class="fa-solid fa-table-cells text-blue-400"></i>
+        <span>सवाल इंडेक्स (3,000)</span>
+      </button>
+
+      <!-- Completion Badge -->
+      <span id="progress-badge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold shadow-sm">
+        0/3000 हल
+      </span>
+
+      <!-- Tricky Interview Filter -->
+      <button onclick="filterTrickyInterviewQuestions()" class="text-[11px] bg-rose-950 hover:bg-rose-900 text-rose-200 border border-rose-500/50 px-2.5 py-1 rounded-lg font-bold transition shadow" title="सीधे Tricky Data & AI सवाल देखें">
+        <i class="fa-solid fa-fire text-amber-400 mr-1"></i>Tricky Qs (2501+)
+      </button>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="w-full bg-slate-800 h-1.5 shrink-0">
+    <div id="course-progress-fill" class="bg-gradient-to-r from-amber-400 via-blue-500 to-emerald-400 h-1.5 transition-all duration-300" style="width: 1%;"></div>
+  </div>
+
+  <!-- ================= MAIN TWO-PANE WORKSPACE: CLASSROOM + LAB ================= -->
+  <main class="flex-1 flex flex-col md:flex-row overflow-hidden p-2.5 md:p-3 gap-3">
+
+    <!-- ================= LEFT PANE: LIVE VIRTUAL CLASSROOM (TEACHER + SMARTBOARD) ================= -->
+    <section class="w-full md:w-5/12 flex flex-col themed-panel rounded-2xl border shadow-2xl overflow-hidden h-1/2 md:h-full">
+      
+      <!-- Classroom Top Ribbon -->
+      <div class="px-4 py-2.5 themed-header border-b border-slate-800 flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center space-x-1.5">
+            <i class="fa-solid fa-chalkboard"></i>
+            <span>स्मार्ट क्लासरूम एवं लाइव थ्योरी</span>
+          </span>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <button onclick="speakCurrentChapterTheory()" class="text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 px-3 py-1 rounded-lg flex items-center space-x-1.5 shadow transition transform active:scale-95">
+            <i class="fa-solid fa-play text-[10px]"></i>
+            <span>लेक्चर सुनें</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TEACHER PODIUM & INTERACTIVE BROADCAST SCREEN -->
+      <div class="bg-gradient-to-b from-black/40 via-transparent to-black/30 p-3 border-b border-slate-800 shrink-0">
+        <div class="flex items-center space-x-3 themed-card border border-slate-700/60 rounded-2xl p-3 shadow-xl relative overflow-hidden">
+          
+          <!-- TEACHER PHOTO & LIVE SPEAKING RING -->
+          <div class="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0 flex items-center justify-center">
+            <div id="avatar-glow-ring" class="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-400 via-rose-500 to-amber-300 opacity-40 blur-md transition-all duration-300"></div>
+            
+            <div class="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-amber-400 shadow-2xl bg-slate-800">
+              <img id="faculty-photo-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80" alt="प्रिया मैम - Data & AI मेंटर" class="w-full h-full object-cover object-top transition duration-300" onerror="this.src='https://placehold.co/200x200/1e293b/f59e0b?text=Priya+Maam'">
+            </div>
+
+            <!-- Instant Photo Change Button -->
+            <button onclick="promptChangeFacultyPhoto()" class="absolute bottom-0 right-0 bg-slate-950 hover:bg-amber-500 hover:text-slate-950 text-amber-300 border border-amber-400/80 rounded-full w-7 h-7 flex items-center justify-center text-xs shadow-lg transition" title="ट्यूटर की फ़ोटो बदलें">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+          </div>
+
+          <!-- TEACHER LIVE PODIUM TALK -->
+          <div class="flex-1 min-w-0 flex flex-col justify-between space-y-1.5">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-xs sm:text-sm font-bold text-amber-300 flex items-center space-x-1.5">
+                  <span>प्रिया मैम</span>
+                  <span class="text-[10px] font-normal themed-muted">(Lead Data & AI Mentor)</span>
+                </span>
+                <span class="text-[10px] text-emerald-400 font-mono block">● लाइव 1-on-1 मेंटरशिप सक्रिय</span>
+              </div>
+
+              <!-- Quick Photo Change Link -->
+              <button onclick="promptChangeFacultyPhoto()" class="text-[11px] text-amber-400 hover:text-amber-300 underline font-semibold flex items-center space-x-1 bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700">
+                <i class="fa-solid fa-image text-[10px]"></i>
+                <span>फ़ोटो बदलें</span>
+              </button>
+            </div>
+
+            <div class="bg-black/50 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 italic leading-relaxed">
+              <p id="faculty-dialogue" class="line-clamp-3 font-medium">
+                "नमस्ते दीपक जी! आज हम इस मॉड्यूल को बच्चों जैसी आसान भाषा और वास्तविक कॉर्पोरेट प्रोजेक्ट्स के साथ सीखेंगे। स्क्रीन पर सवाल देखिए, हम साथ मिलकर हल करेंगे!"
+              </p>
+            </div>
+
+            <div class="flex items-center justify-between text-[10px] themed-muted">
+              <span>व्यक्तिगत मार्गदर्शन (1-on-1 Mentorship)</span>
+              <button onclick="triggerFacultyWelcome()" class="text-amber-400 hover:text-amber-300 font-bold flex items-center space-x-1">
+                <i class="fa-solid fa-volume-high text-[10px]"></i>
+                <span>मैम से सुनें</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIGITAL SMART BLACKBOARD (THEORY CONTENT) -->
+      <div id="theory-container" class="flex-1 p-3 md:p-4 overflow-y-auto space-y-3.5 text-xs md:text-sm leading-relaxed">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </section>
+
+    <!-- ================= RIGHT PANE: EXERCISE BANNER + CODE EDITOR & LAB ================= -->
+    <section class="w-full md:w-7/12 flex flex-col themed-panel rounded-2xl border shadow-2xl overflow-hidden h-1/2 md:h-full">
+
+      <!-- ================= CLEAR QUESTION & ASSIGNMENT CARD ================= -->
+      <div id="main-question-card" class="p-4 question-hero-box themed-card border-b shrink-0 space-y-3 bg-gradient-to-r from-blue-950/70 via-slate-900 to-indigo-950/70">
+        
+        <!-- Question Badge + Title + Audio -->
+        <div class="flex items-start justify-between gap-3">
+          <div class="space-y-1.5 flex-1">
+            <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+              <span id="task-badge" class="text-xs font-black uppercase px-3 py-1 rounded-md bg-blue-600 text-white font-mono shadow-md flex items-center space-x-1.5">
+                <i class="fa-solid fa-terminal"></i>
+                <span>सवाल #1 / 3000</span>
+              </span>
+              <span id="task-difficulty-badge" class="text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                स्तर 1: आसान एवं व्यावहारिक
+              </span>
+              
+              <button onclick="speakTaskStatement()" class="text-amber-400 hover:text-amber-300 text-xs font-bold flex items-center space-x-1 bg-slate-800/90 px-2.5 py-1 rounded-md border border-slate-700 shadow transition transform active:scale-95" title="सवाल बोलकर सुनें">
+                <i class="fa-solid fa-volume-high"></i>
+                <span>सवाल सुनें</span>
+              </button>
+
+              <button onclick="explainQuestionWithMultipleExamples()" class="text-emerald-400 hover:text-emerald-300 text-xs font-bold flex items-center space-x-1 bg-emerald-950/70 px-2.5 py-1 rounded-md border border-emerald-600/50 shadow transition transform active:scale-95" title="सवाल को आसान उदाहरणों से समझें">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                <span>उदाहरण से समझें</span>
+              </button>
+            </div>
+
+            <!-- Prominent Main Question Title & Description with Visual Schema Card -->
+            <div class="space-y-2 pt-1">
+              <h2 id="task-title" class="text-base sm:text-lg font-black text-white tracking-wide flex items-center space-x-2">
+                <span>टास्क शीर्षक</span>
+              </h2>
+              
+              <!-- Visual Graphic / Schema Diagram Card for Question Clarity -->
+              <div id="task-visual-banner" class="bg-black/60 border border-blue-500/30 rounded-xl p-2.5 flex items-center space-x-3">
+                <div id="task-visual-icon" class="w-10 h-10 rounded-lg bg-blue-900/60 border border-blue-400/40 flex items-center justify-center text-amber-400 text-lg shrink-0">
+                  <i class="fa-solid fa-file-excel"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <span id="task-visual-label" class="text-[11px] font-mono text-amber-300 font-bold uppercase tracking-wider">Visual Context: Excel Workflow</span>
+                    <button onclick="speakTaskVisualContext()" class="text-slate-400 hover:text-amber-300 text-[10px]" title="डायग्राम का विवरण सुनें">
+                      <i class="fa-solid fa-volume-high"></i>
+                    </button>
+                  </div>
+                  <p id="task-visual-desc" class="text-[11px] text-slate-300 truncate">मॉड्यूल के अनुसार डेटा प्रोसेसिंग व गणना</p>
+                </div>
+              </div>
+
+              <div class="bg-black/50 p-3 rounded-xl border border-amber-500/40 flex items-start justify-between gap-2">
+                <p id="task-desc" class="text-xs sm:text-sm text-amber-200 font-semibold leading-relaxed flex-1">
+                  टास्क का विवरण यहाँ आएगा।
+                </p>
+                <button onclick="speakTaskStatement()" class="text-amber-400 hover:text-white shrink-0 p-1" title="विवरण सुनें">
+                  <i class="fa-solid fa-volume-high text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hint Trigger -->
+          <div class="shrink-0 flex flex-col space-y-1.5">
+            <button onclick="toggleHintBox()" class="text-xs font-bold text-amber-300 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 px-3 py-2 rounded-xl transition flex items-center space-x-1.5 shadow-lg transform hover:scale-105">
+              <i class="fa-solid fa-lightbulb text-amber-400"></i>
+              <span>हिंट (Hint)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step-by-Step Action Guide -->
+        <div class="bg-blue-950/80 border border-blue-500/50 rounded-xl p-3 text-xs text-blue-100 space-y-1.5 shadow-inner">
+          <div class="flex items-center justify-between font-bold text-blue-300">
+            <span class="flex items-center space-x-2 text-[13px]">
+              <i class="fa-solid fa-shoe-prints text-amber-400"></i>
+              <span>कदम-दर-कदम क्या करना है (Step-by-Step Action):</span>
+            </span>
+            <button onclick="speakStepGuide()" class="text-blue-300 hover:text-white text-xs bg-blue-900/60 px-2 py-0.5 rounded border border-blue-700" title="स्टेप्स सुनें">
+              <i class="fa-solid fa-volume-high mr-1"></i>स्टेप्स सुनें
+            </button>
+          </div>
+          <p id="task-steps-text" class="text-slate-200 font-medium leading-relaxed pl-5">1. नीचे दिए गए एडिटर में सही कोड लिखें। 2. रन बटन दबाएं।</p>
+        </div>
+
+        <!-- Expected Target Card -->
+        <div class="flex items-center justify-between bg-black/60 border border-slate-700 rounded-xl p-2.5 text-xs font-mono">
+          <div class="flex items-center space-x-2 flex-wrap">
+            <span class="themed-muted font-sans font-bold">अपेक्षित परिणाम (Expected Target):</span>
+            <code id="expected-result-text" class="bg-slate-900 border border-emerald-500/50 px-3 py-1 rounded text-emerald-400 font-extrabold text-sm shadow">Ready</code>
+          </div>
+          <button onclick="speakExpectedResult()" class="text-slate-400 hover:text-amber-400 text-xs px-2 py-1 bg-slate-800 rounded border border-slate-700" title="अपेक्षित परिणाम सुनें">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+
+        <!-- Multi-Example Teaching Drawer (Opens when user needs extra understanding) -->
+        <div id="multi-example-box" class="hidden p-3.5 rounded-xl bg-gradient-to-r from-purple-950/90 to-slate-900 border border-purple-500/60 text-purple-100 text-xs shadow-2xl animate-fadeIn space-y-2">
+          <div class="flex items-center justify-between border-b border-purple-800/80 pb-1.5">
+            <span class="font-bold text-amber-300 flex items-center space-x-1.5 text-sm">
+              <i class="fa-solid fa-graduation-cap text-amber-400"></i>
+              <span>प्रिया मैम की विशेष कक्षा: 2 सरल उदाहरणों से समझें</span>
+            </span>
+            <button onclick="toggleMultiExampleBox()" class="text-slate-400 hover:text-white text-base">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div id="multi-example-content" class="space-y-2 text-slate-200 leading-relaxed font-medium">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Collapsible Hint Card -->
+        <div id="task-hint-box" class="hidden p-3 rounded-xl bg-amber-950/70 border border-amber-500/60 text-amber-200 text-xs shadow-lg animate-fadeIn">
+          <div class="flex items-center justify-between font-bold mb-1">
+            <span class="flex items-center space-x-1.5 text-sm">
+              <i class="fa-solid fa-lightbulb text-amber-400"></i>
+              <span>💡 मैम का हिंट:</span>
+            </span>
+            <button onclick="speakHintText()" class="text-amber-300 hover:text-white text-xs bg-amber-900/60 px-2 py-0.5 rounded">
+              <i class="fa-solid fa-volume-high mr-1"></i>हिंट सुनें
+            </button>
+          </div>
+          <p id="task-hint-text" class="text-amber-100 font-medium">हिंट निर्देश।</p>
+        </div>
+      </div>
+
+      <!-- ================= CODE WORKSPACE + SOFTWARE SIMULATORS ================= -->
+      <div class="flex-1 flex flex-col min-h-0 p-3 space-y-2 overflow-hidden bg-black/40">
+        
+        <!-- Environment Ribbon with Simulator Selector Tabs -->
+        <div class="flex items-center justify-between text-xs themed-muted shrink-0 flex-wrap gap-1">
+          <div class="flex items-center space-x-2 font-mono text-[11px]">
+            <i class="fa-solid fa-terminal text-amber-400"></i>
+            <span id="current-filename" class="font-bold text-slate-200">solution.py</span>
+            <span id="runtime-pill" class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-700/60 px-2 py-0.5 rounded font-sans font-bold">Python 3.12 (Zero API Key)</span>
+          </div>
+
+          <!-- Dynamic Software Environment Indicator -->
+          <div class="flex items-center space-x-1.5 text-[11px]">
+            <span id="software-mode-pill" class="bg-blue-900/60 text-blue-200 border border-blue-500/50 px-2 py-0.5 rounded font-semibold flex items-center space-x-1">
+              <i class="fa-solid fa-table-cells text-emerald-400"></i>
+              <span>एक्सेल शीट मोड सक्रिय</span>
+            </span>
+            
+            <button onclick="resetTaskCode()" class="themed-muted hover:text-white flex items-center space-x-1 px-2 py-0.5 rounded bg-slate-800 border border-slate-700 transition" title="कोड शुरुआती स्थिति में लाएं">
+              <i class="fa-solid fa-rotate-left text-[10px]"></i>
+              <span>रीसेट</span>
+            </button>
+            <button onclick="copyEditorCode()" class="themed-muted hover:text-white flex items-center space-x-1 px-2 py-0.5 rounded bg-slate-800 border border-slate-700 transition" title="कोड कॉपी करें">
+              <i class="fa-regular fa-copy text-[10px]"></i>
+              <span>कॉपी</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Split Workspace: Interactive Software Canvas + Code Area -->
+        <div class="flex-1 relative flex flex-col rounded-xl border border-slate-800 bg-slate-950 overflow-hidden focus-within:border-amber-400 shadow-inner">
+          
+          <!-- ================= 1. NATIVE INTERACTIVE EXCEL SPREADSHEET SIMULATOR ================= -->
+          <div id="excel-sheet-simulator" class="h-1/2 border-b border-slate-800 bg-slate-900 flex flex-col text-slate-100 overflow-hidden shrink-0">
+            <!-- Excel Ribbon Header -->
+            <div class="bg-emerald-950/80 px-3 py-1 text-[11px] font-sans font-bold text-emerald-300 border-b border-emerald-800/60 flex items-center justify-between shrink-0">
+              <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-file-excel text-emerald-400 text-sm"></i>
+                <span>Microsoft Excel 365 लाइव वर्कबुक (Active Sheet: Analytics_Data)</span>
+                <button onclick="speakExcelFormulaHelp()" class="text-slate-400 hover:text-amber-300 text-xs ml-1" title="एक्सेल फॉर्मूला गाइड सुनें">
+                  <i class="fa-solid fa-volume-high"></i>
+                </button>
+              </div>
+              <div class="flex items-center space-x-2 text-[10px] text-slate-300 font-mono">
+                <span>Active Cell: <strong id="excel-active-cell-label" class="text-amber-400">B2</strong></span>
+                <span class="text-slate-600">|</span>
+                <button onclick="syncExcelGridToEditor()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-2 py-0.5 rounded font-sans font-bold shadow flex items-center space-x-1">
+                  <i class="fa-solid fa-arrow-up"></i>
+                  <span>एडिटर में सिंक करें</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Excel Formula Bar fx -->
+            <div class="bg-slate-950 px-2.5 py-1 border-b border-slate-800 flex items-center space-x-2 text-xs font-mono shrink-0">
+              <span class="text-slate-500 italic font-bold">fx</span>
+              <input id="excel-formula-input" type="text" value="=SUM(C2:C5)" oninput="updateFormulaFromInput(this.value)" class="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-amber-300 text-xs focus:outline-none focus:border-emerald-500">
+              <button onclick="applyExcelCalculation()" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 px-2 py-0.5 rounded border border-slate-700 text-[11px] font-sans font-bold">Calculate</button>
+            </div>
+
+            <!-- Excel Grid (A to E Columns, 1 to 5 Rows) -->
+            <div class="flex-1 overflow-auto bg-slate-950 p-1 text-xs font-mono">
+              <table id="excel-interactive-table" class="w-full border-collapse border border-slate-800 text-center select-none text-[11px]">
+                <thead>
+                  <tr class="bg-slate-900 text-slate-400 font-bold">
+                    <th class="w-8 border border-slate-800 py-1 bg-slate-950"></th>
+                    <th class="border border-slate-800 py-1 px-2">A (Region)</th>
+                    <th class="border border-slate-800 py-1 px-2">B (Units Sold)</th>
+                    <th class="border border-slate-800 py-1 px-2">C (Revenue ₹)</th>
+                    <th class="border border-slate-800 py-1 px-2">D (Target %)</th>
+                  </tr>
+                </thead>
+                <tbody id="excel-grid-body">
+                  <tr>
+                    <td class="bg-slate-900 font-bold text-slate-500 border border-slate-800">1</td>
+                    <td class="border border-slate-800 p-0"><input type="text" value="North India" onchange="recalcExcelSheet()" class="w-full bg-transparent text-center p-1 text-slate-200 focus:bg-blue-950/60 focus:outline-none"></td>
+                    <td class="border border-slate-800 p-0"><input type="number" value="120" onchange="recalcExcelSheet()" class="w-full bg-transparent text-center p-1 text-emerald-300 focus:bg-blue-950/60 focus:outline-none"></td>
+                    <td class="border border-slate-800 p-0"><input type="number" value="240000" onchange="recalcExcelSheet()" class="w-full bg-transparent text-center p-1 text-amber-300 focus:bg-blue-950/60 focus:outline-none"></td>
+                    <td class="border border-slate-800 p-0"><input type="text" value="104%" onchange="recalcExcelSheet()" class="w-full bg-transparent text-center p-1 text-blue-300 focus:bg-blue-950/60 focus:outline-none"></td>
+                  </tr>
+                  <tr>
+                    <td class="bg-slate-900 font-bold text-slate-500 border border-slate-800">2</td>
+                    <td class="border border-slate-800 p-0"><input type="text" value="South India" onchange="recalcExcelSheet()" class="w-full bg-transparent text-center p-1 text-slate-200 focus:bg-blue-950/60 focus:outline-none"></td>
+                    <td class="border border-slate-800 p-0"><input type="number" value="95" onchange="recalcExcelSheet()" class="w-full bg-transparent text-center p-1 text-emerald-300 focus:bg-blue-950/60 focus:outline-none"></td>
+                    <td class="border border-slate-800 p-0"><input type="number" value="190000" onchange="recalcExcelSheet()" class="w-full bg-transparent text-center p-1 text-amber-300 focus:bg-blue-950/60 focus:outline-none"></td>
+                    <td class="border border-slate-800 p-0"><input type="text" value="98%" onchange="recalcExcelSheet()" class="w-full bg-transparent text-center p-1 text-blue-300 focus:bg-blue-950/60 focus:outline-none"></td>
+                  </tr>
+                  <tr>
+                    <td class="bg-slate-900 font-bold text-slate-500 border border-slate-800">3</td>
+                    <td class="border border-slate-800 p-0"><input type="text" value="West India" onchange="recalcExcelSheet()" class="w-full bg-transparent text-center p-1 text-slate-200 focus:bg-blue-950/60 focus:outline-none"></td>
+                    <td class="border border-slate-800 p-0"><input type="number" value="140" onchange="recalcExcelSheet()" class="w-full bg-transparent text-center p-1 text-emerald-300 focus:bg-blue-950/60 focus:outline-none"></td>
+                    <td class="border border-slate-800 p-0"><input type="number" value="280000" onchange="recalcExcelSheet()" class="w-full bg-transparent text-center p-1 text-amber-300 focus:bg-blue-950/60 focus:outline-none"></td>
+                    <td class="border border-slate-800 p-0"><input type="text" value="115%" onchange="recalcExcelSheet()" class="w-full bg-transparent text-center p-1 text-blue-300 focus:bg-blue-950/60 focus:outline-none"></td>
+                  </tr>
+                  <tr class="bg-slate-900/90 font-bold text-emerald-300">
+                    <td class="bg-slate-950 border border-slate-800 text-slate-500">Σ</td>
+                    <td class="border border-slate-800 py-1 text-left pl-2">Total Summary</td>
+                    <td id="excel-sum-units" class="border border-slate-800 py-1">355 Units</td>
+                    <td id="excel-sum-rev" class="border border-slate-800 py-1 text-amber-300">₹7,10,000</td>
+                    <td id="excel-avg-target" class="border border-slate-800 py-1 text-blue-300">105.6%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ================= 2. NATIVE INTERACTIVE TALLY PRIME 5.0 VOUCHER SIMULATOR ================= -->
+          <div id="tally-prime-simulator" class="hidden h-1/2 border-b border-slate-800 bg-[#0d221a] flex flex-col text-slate-100 overflow-hidden shrink-0">
+            <!-- Tally Top Ribbon -->
+            <div class="bg-[#051610] px-3 py-1 text-[11px] font-mono font-bold text-emerald-300 border-b border-emerald-900 flex items-center justify-between shrink-0">
+              <div class="flex items-center space-x-2">
+                <span class="bg-emerald-600 text-slate-950 px-1.5 py-0.2 rounded font-black text-[10px]">TallyPrime 5.0</span>
+                <span>Gateway of Tally &gt; Accounting Vouchers</span>
+                <button onclick="speakTallyHelp()" class="text-slate-400 hover:text-amber-300 text-xs ml-1" title="टैली नियम सुनें">
+                  <i class="fa-solid fa-volume-high"></i>
+                </button>
+              </div>
+              <div class="flex items-center space-x-1.5 text-[10px]">
+                <span class="text-amber-400">Current Period: 1-Apr-2026 to 31-Mar-2027</span>
+              </div>
+            </div>
+
+            <!-- Tally Voucher Buttons Bar (F4 to F9) -->
+            <div class="bg-[#081f15] p-1 border-b border-emerald-900/80 flex items-center space-x-1 overflow-x-auto text-[10px] font-mono shrink-0">
+              <button onclick="setTallyVoucher('F4', 'Contra')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-emerald-800 border border-emerald-700/60 text-slate-200">F4: Contra</button>
+              <button onclick="setTallyVoucher('F5', 'Payment')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-emerald-800 border border-emerald-700/60 text-slate-200">F5: Payment</button>
+              <button onclick="setTallyVoucher('F6', 'Receipt')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-emerald-800 border border-emerald-700/60 text-slate-200">F6: Receipt</button>
+              <button onclick="setTallyVoucher('F7', 'Journal')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-emerald-800 border border-emerald-700/60 text-slate-200">F7: Journal</button>
+              <button onclick="setTallyVoucher('F8', 'Sales')" class="px-2 py-0.5 rounded bg-emerald-700 text-white font-bold border border-emerald-500">F8: Sales</button>
+              <button onclick="setTallyVoucher('F9', 'Purchase')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-emerald-800 border border-emerald-700/60 text-slate-200">F9: Purchase</button>
+            </div>
+
+            <!-- Tally Active Voucher Screen -->
+            <div class="flex-1 p-2 bg-[#092218] overflow-y-auto space-y-1.5 text-xs font-mono">
+              <div class="flex items-center justify-between border-b border-emerald-800/80 pb-1 text-[11px]">
+                <div><span class="text-slate-400">Voucher Type:</span> <strong id="tally-vch-type" class="text-amber-300">Sales (Accounting Invoice)</strong></div>
+                <div><span class="text-slate-400">No.</span> <strong class="text-white">0042</strong></div>
+                <div><span class="text-slate-400">Date:</span> <strong class="text-white">27-Oct-2026</strong></div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 text-[11px]">
+                <div class="bg-black/50 p-1.5 rounded border border-emerald-900">
+                  <span class="text-slate-400 text-[10px] block">Party A/c Name:</span>
+                  <input id="tally-party-name" type="text" value="Sharma Electronics (Debtor)" class="w-full bg-transparent text-emerald-300 font-bold focus:outline-none">
+                </div>
+                <div class="bg-black/50 p-1.5 rounded border border-emerald-900">
+                  <span class="text-slate-400 text-[10px] block">Current Balance:</span>
+                  <span id="tally-party-bal" class="text-amber-300 font-bold">₹1,45,000 Dr</span>
+                </div>
+              </div>
+
+              <!-- Tally Entry Lines -->
+              <div class="bg-black/60 p-2 rounded border border-emerald-900 space-y-1 text-[11px]">
+                <div class="flex items-center justify-between text-slate-400 border-b border-slate-800 pb-0.5 text-[10px]">
+                  <span>Particulars (Ledger Account)</span>
+                  <span>Rate / Amount (₹)</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-white font-bold">Sales Account (GST Applicable @ 18%)</span>
+                  <span id="tally-sub-amt" class="text-emerald-300 font-bold">₹50,000.00 Cr</span>
+                </div>
+                <div class="flex items-center justify-between text-slate-300">
+                  <span>Output CGST @ 9%</span>
+                  <span>₹4,500.00 Cr</span>
+                </div>
+                <div class="flex items-center justify-between text-slate-300">
+                  <span>Output SGST @ 9%</span>
+                  <span>₹4,500.00 Cr</span>
+                </div>
+                <div class="flex items-center justify-between pt-1 border-t border-emerald-800 font-bold text-amber-300 text-xs">
+                  <span>Total Invoice Amount:</span>
+                  <span id="tally-grand-total">₹59,000.00</span>
+                </div>
+              </div>
+
+              <!-- Narration & Sync to Code -->
+              <div class="flex items-center justify-between pt-1">
+                <input id="tally-narration" type="text" value="Narration: Being goods sold on credit vide Inv #0042" class="flex-1 bg-transparent border-b border-emerald-800 text-[10px] text-slate-300 focus:outline-none">
+                <button onclick="syncTallyToEditor()" class="ml-2 px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-sans font-black text-[10px] rounded shadow">
+                  एडिटर में लगाएं
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= 3. NATIVE SQL DATABASE QUERY RUNNER ================= -->
+          <div id="sql-console-simulator" class="hidden h-1/2 border-b border-slate-800 bg-slate-900 flex flex-col text-slate-100 overflow-hidden shrink-0">
+            <div class="bg-slate-950 px-3 py-1 text-[11px] font-mono font-bold text-blue-400 border-b border-slate-800 flex items-center justify-between shrink-0">
+              <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-database text-amber-400"></i>
+                <span>PostgreSQL 16 / SQLite Engine (Live Database Schema)</span>
+                <button onclick="speakSqlHelp()" class="text-slate-400 hover:text-amber-300 text-xs ml-1" title="SQL निर्देश सुनें">
+                  <i class="fa-solid fa-volume-high"></i>
+                </button>
+              </div>
+              <span class="text-[10px] text-slate-400">Tables: customers, orders, revenue</span>
+            </div>
+            <div class="p-2 overflow-auto flex-1 flex flex-col justify-between bg-slate-950 text-xs font-mono">
+              <div class="space-y-1">
+                <div class="text-[10px] text-slate-500">Live Table: orders (Showing Top 3 Rows)</div>
+                <table class="w-full border-collapse border border-slate-800 text-left text-[11px]">
+                  <tr class="bg-slate-900 text-slate-300">
+                    <th class="p-1 border border-slate-800">order_id</th>
+                    <th class="p-1 border border-slate-800">customer_name</th>
+                    <th class="p-1 border border-slate-800">category</th>
+                    <th class="p-1 border border-slate-800">amount (₹)</th>
+                  </tr>
+                  <tr>
+                    <td class="p-1 border border-slate-800 text-amber-300">#1001</td>
+                    <td class="p-1 border border-slate-800 text-slate-200">Priya Sharma</td>
+                    <td class="p-1 border border-slate-800 text-blue-300">Hardware</td>
+                    <td class="p-1 border border-slate-800 text-emerald-400">₹45,000</td>
+                  </tr>
+                  <tr>
+                    <td class="p-1 border border-slate-800 text-amber-300">#1002</td>
+                    <td class="p-1 border border-slate-800 text-slate-200">Deepak Verma</td>
+                    <td class="p-1 border border-slate-800 text-blue-300">Electronics</td>
+                    <td class="p-1 border border-slate-800 text-emerald-400">₹62,000</td>
+                  </tr>
+                  <tr>
+                    <td class="p-1 border border-slate-800 text-amber-300">#1003</td>
+                    <td class="p-1 border border-slate-800 text-slate-200">Rohan Mehta</td>
+                    <td class="p-1 border border-slate-800 text-blue-300">Software</td>
+                    <td class="p-1 border border-slate-800 text-emerald-400">₹38,000</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= 4. CODE EDITOR (PYTHON / SQL / CODE) ================= -->
+          <div class="flex-1 relative flex flex-col bg-slate-950 overflow-hidden">
+            <textarea id="code-input" spellcheck="false" class="w-full flex-1 bg-transparent p-3.5 text-xs md:text-sm font-mono text-emerald-300 focus:outline-none resize-none leading-relaxed" placeholder="# यहाँ अपना कोड लिखें..."></textarea>
+          </div>
+
+          <!-- Interactive Iframe Preview for HTML/CSS Web Design -->
+          <div id="web-live-preview-box" class="hidden h-1/2 border-t border-slate-800 bg-white flex flex-col">
+            <div class="bg-slate-100 px-2 py-0.5 text-[10px] font-mono text-slate-700 border-b flex items-center justify-between">
+              <span><i class="fa-solid fa-globe text-blue-600"></i> लाइव वेबसाइट रेंडरिंग प्रीव्यू (Live Render)</span>
+              <span class="text-[9px] text-slate-500">तुरंत अपडेट होता है</span>
+            </div>
+            <iframe id="live-web-frame" class="w-full flex-1 border-0 bg-white"></iframe>
+          </div>
+        </div>
+
+        <!-- Buttons: Run, Check & Next Question with Dedicated Shortcut Badges -->
+        <div class="flex items-center justify-between shrink-0 pt-1">
+          <span class="text-[11px] themed-muted hidden sm:inline">
+            <kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded font-mono text-slate-200">Ctrl</kbd> + <kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded font-mono text-slate-200">Enter</kbd> से रन करें • 
+            <kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded font-mono text-amber-300 font-bold">Alt</kbd> + <kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded font-mono text-amber-300 font-bold">N</kbd> से <strong>"अगला सवाल हल करें"</strong>
+          </span>
+
+          <div class="flex items-center space-x-2.5 w-full sm:w-auto justify-end">
+            <button id="btn-run-query" onclick="executeAndEvaluateCode()" class="flex-1 sm:flex-initial px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-95 text-white text-xs font-black rounded-xl shadow-xl transition flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-play text-xs text-amber-300"></i>
+              <span>रन करें और जांचें</span>
+            </button>
+            <button id="btn-next-step" onclick="stepQuestion(1)" title="शॉर्टकट: Alt + N दबाकर अगले सवाल पर जाएं" class="hidden px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-95 text-white text-xs font-black rounded-xl shadow-xl transition flex items-center space-x-2 animate-bounce">
+              <span>अगला सवाल हल करें</span>
+              <kbd class="hidden md:inline px-1.5 py-0.5 text-[9px] bg-black/40 rounded border border-emerald-400/50 text-amber-300 font-mono font-bold">Alt + N</kbd>
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Console & Output Terminal Area -->
+        <div class="h-36 md:h-44 rounded-xl border border-slate-800 bg-slate-950 p-2.5 overflow-y-auto flex flex-col justify-between shrink-0 shadow-inner">
+          <div>
+            <div class="flex items-center justify-between pb-1.5 mb-1.5 border-b border-slate-800">
+              <div class="flex items-center space-x-1.5">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">टर्मिनल आउटपुट (Terminal Console)</span>
+                <button onclick="speakTerminalOutput()" class="text-slate-400 hover:text-amber-400 text-xs" title="आउटपुट सुनें">
+                  <i class="fa-solid fa-volume-high"></i>
+                </button>
+              </div>
+              <span id="task-status-pill" class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300">तैयार</span>
+            </div>
+            <pre id="terminal-screen" class="text-xs font-mono text-emerald-400 whitespace-pre-wrap leading-tight">"रन करें और जांचें" बटन दबाकर कोड का परिणाम देखें...</pre>
+          </div>
+
+          <!-- GURUJI AUTO-TUTOR BOX -->
+          <div id="guruji-auto-tutor" class="mt-2 hidden rounded-xl p-3 text-xs border transition shadow-xl bg-rose-950/70 border-rose-500/70 text-slate-100">
+            <!-- Dynamically populated with step guidance, audio player and apply fix -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= THEME & COLOR CUSTOMIZER MODAL ================= -->
+  <div id="theme-customizer-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50 animate-fadeIn">
+    <div class="themed-panel border border-slate-700 rounded-3xl w-full max-w-xl p-6 shadow-2xl space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-700/80 pb-3">
+        <div class="flex items-center space-x-2.5">
+          <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 flex items-center justify-center text-white shadow">
+            <i class="fa-solid fa-palette text-sm"></i>
+          </span>
+          <div>
+            <h3 class="text-base font-extrabold text-white">कलर व बैकग्राउंड कस्टमाइज़र (Personal Themes)</h3>
+            <p class="text-xs themed-muted">अपनी पसंद का बैकग्राउंड, फॉन्ट और थीम चुनें</p>
+          </div>
+        </div>
+        <button onclick="toggleThemeModal()" class="text-slate-400 hover:text-white text-xl">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-xs font-bold text-amber-300 uppercase tracking-wider block">1-क्लिक पसंदीदा थीम्स (Presets):</label>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+          <button onclick="applyPresetTheme('darkSlate')" class="p-2.5 rounded-xl bg-slate-950 border border-slate-700 hover:border-amber-400 text-left font-bold text-white flex items-center space-x-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-slate-900 border border-amber-400 inline-block"></span>
+            <span>डार्क स्लेट (क्लासिक)</span>
+          </button>
+          <button onclick="applyPresetTheme('emeraldOasis')" class="p-2.5 rounded-xl bg-[#092218] border border-emerald-600/60 hover:border-emerald-400 text-left font-bold text-emerald-200 flex items-center space-x-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block"></span>
+            <span>एमराल्ड क्लासरूम</span>
+          </button>
+          <button onclick="applyPresetTheme('royalVelvet')" class="p-2.5 rounded-xl bg-[#1c0f38] border border-purple-500/60 hover:border-purple-300 text-left font-bold text-purple-200 flex items-center space-x-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-purple-500 inline-block"></span>
+            <span>रॉयल पर्पल</span>
+          </button>
+          <button onclick="applyPresetTheme('cyberNeon')" class="p-2.5 rounded-xl bg-[#070d18] border border-cyan-500/60 hover:border-cyan-300 text-left font-bold text-cyan-200 flex items-center space-x-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-cyan-400 inline-block"></span>
+            <span>साइबर नियॉन</span>
+          </button>
+          <button onclick="applyPresetTheme('warmSepia')" class="p-2.5 rounded-xl bg-[#2a221b] border border-amber-700/60 hover:border-amber-400 text-left font-bold text-amber-200 flex items-center space-x-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-amber-600 inline-block"></span>
+            <span>वॉर्म सेपिया</span>
+          </button>
+          <button onclick="applyPresetTheme('deepMidnight')" class="p-2.5 rounded-xl bg-black border border-slate-800 hover:border-slate-500 text-left font-bold text-slate-200 flex items-center space-x-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-slate-950 inline-block"></span>
+            <span>मिडनाइट ब्लैक</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-3 pt-2 border-t border-slate-800">
+        <label class="text-xs font-bold text-amber-300 uppercase tracking-wider block">मनमुताबिक रंग सेट करें (Custom Colors):</label>
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div class="p-2.5 bg-black/40 rounded-xl border border-slate-800 flex items-center justify-between">
+            <span class="font-medium">बैकग्राउंड रंग:</span>
+            <input type="color" id="theme-color-bg" value="#020617" onchange="updateCustomColors()" class="w-8 h-8 rounded border border-slate-700 cursor-pointer bg-transparent">
+          </div>
+          <div class="p-2.5 bg-black/40 rounded-xl border border-slate-800 flex items-center justify-between">
+            <span class="font-medium">टेक्स्ट रंग:</span>
+            <input type="color" id="theme-color-text" value="#f8fafc" onchange="updateCustomColors()" class="w-8 h-8 rounded border border-slate-700 cursor-pointer bg-transparent">
+          </div>
+          <div class="p-2.5 bg-black/40 rounded-xl border border-slate-800 flex items-center justify-between">
+            <span class="font-medium">पैनल रंग:</span>
+            <input type="color" id="theme-color-panel" value="#0f172a" onchange="updateCustomColors()" class="w-8 h-8 rounded border border-slate-700 cursor-pointer bg-transparent">
+          </div>
+          <div class="p-2.5 bg-black/40 rounded-xl border border-slate-800 flex items-center justify-between">
+            <span class="font-medium">हाइलाइट रंग:</span>
+            <input type="color" id="theme-color-accent" value="#f59e0b" onchange="updateCustomColors()" class="w-8 h-8 rounded border border-slate-700 cursor-pointer bg-transparent">
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-black/40 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+          <span class="font-medium">फ़ॉन्ट स्टाइल (Font):</span>
+          <select id="theme-font-family" onchange="updateCustomColors()" class="bg-slate-900 border border-slate-700 text-white rounded-lg px-2 py-1 focus:outline-none">
+            <option value="'Inter', sans-serif">Inter (Modern Clean)</option>
+            <option value="'Fira Code', monospace">Fira Code (Developer Mono)</option>
+            <option value="'Georgia', serif">Georgia (Book Serif)</option>
+            <option value="'Segoe UI', sans-serif">Segoe UI (Windows Native)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-800">
+        <button onclick="resetThemeToDefault()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl">डिफ़ॉल्ट पर लाएं</button>
+        <button onclick="toggleThemeModal()" class="px-5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs rounded-xl shadow-lg">हो गया (Save & Close)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 3,000 QUESTIONS INDEX MODAL / DRAWER ================= -->
+  <div id="question-drawer-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-3 md:p-6 z-50">
+    <div class="themed-panel border border-slate-800 rounded-3xl w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden shadow-2xl">
+      <div class="p-4 themed-header border-b border-slate-800 flex items-center justify-between shrink-0">
+        <div>
+          <h3 class="text-sm md:text-base font-bold text-amber-300 flex items-center space-x-2">
+            <i class="fa-solid fa-list-ol"></i>
+            <span>3,000 सवाल इंडेक्स नेविगेटर (Complete 3,000 Question Grid)</span>
+          </h3>
+          <p class="text-[11px] themed-muted">किसी भी सवाल पर क्लिक करके सीधे अभ्यास शुरू करें</p>
+        </div>
+        <button onclick="toggleQuestionDrawer()" class="text-slate-400 hover:text-white text-lg px-2">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-3 bg-black/40 border-b border-slate-800 flex items-center justify-between gap-2 text-xs flex-wrap shrink-0">
+        <div class="flex items-center space-x-2">
+          <span class="themed-muted">रेंज फ़िल्टर (1 - 3,000):</span>
+          <select id="drawer-range-select" onchange="renderDrawerQuestions(parseInt(this.value))" class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-amber-300 text-xs">
+            <option value="0">सवाल 1 - 250 (स्तर 1: आसान एवं व्यावहारिक)</option>
+            <option value="250">सवाल 251 - 500 (स्तर 1: बुनियादी गणना)</option>
+            <option value="500">सवाल 501 - 1000 (स्तर 2: मूलभूत व्यावहारिक नियम)</option>
+            <option value="1000">सवाल 1001 - 1500 (स्तर 2: एडवांस कोर लॉजिक)</option>
+            <option value="1500">सवाल 1501 - 2000 (स्तर 3: मध्यम सिस्टम केस स्टडी)</option>
+            <option value="2000">सवाल 2001 - 2500 (स्तर 3: कॉर्पोरेट डेटा प्रोजेक्ट्स)</option>
+            <option value="2500">सवाल 2501 - 3000 (स्तर 4: ट्रिकी इंटरव्यू व प्रोडक्शन स्तर)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="drawer-grid-container" class="flex-1 p-4 overflow-y-auto grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2 text-xs font-mono">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 24/7 UNIVERSAL HELP & DOUBT SOLVER MODAL ================= -->
+  <div id="universal-help-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-3 md:p-6 z-50 animate-fadeIn">
+    <div class="themed-panel border border-emerald-500/50 rounded-3xl w-full max-w-2xl h-[85vh] flex flex-col overflow-hidden shadow-2xl">
+      <div class="p-4 themed-header border-b border-slate-800 flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-2.5">
+          <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-bold shadow">
+            <i class="fa-solid fa-headset text-sm"></i>
+          </span>
+          <div>
+            <h3 class="text-sm md:text-base font-bold text-white flex items-center space-x-1.5">
+              <span>24/7 यूनिवर्सल डेटा व AI हेल्प सॉल्वर</span>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.2 rounded">लाइव सहायता</span>
+            </h3>
+            <p class="text-[11px] themed-muted">कोई भी संशय, गलती या सवाल पूछें — बोलकर या लिखकर</p>
+          </div>
+        </div>
+        <button onclick="toggleUniversalHelpModal()" class="text-slate-400 hover:text-white text-lg px-2">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-3 bg-black/40 border-b border-slate-800 flex items-center space-x-2 overflow-x-auto text-[11px] shrink-0">
+        <span class="text-emerald-400 font-bold shrink-0"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>त्वरित मदद:</span>
+        <button onclick="quickAskHelp('इस सवाल में मेरी क्या गलती है?')" class="px-2.5 py-1 bg-slate-900 border border-slate-700 hover:border-emerald-400 rounded-lg text-slate-200 shrink-0">मेरी गलती कहाँ है?</button>
+        <button onclick="quickAskHelp('कृपया इसे और आसान उदाहरण से समझाइए')" class="px-2.5 py-1 bg-slate-900 border border-slate-700 hover:border-emerald-400 rounded-lg text-slate-200 shrink-0">आसान उदाहरण दें</button>
+        <button onclick="quickAskHelp('Power BI और SQL कैसे कनेक्ट करें?')" class="px-2.5 py-1 bg-slate-900 border border-slate-700 hover:border-emerald-400 rounded-lg text-slate-200 shrink-0">Power BI & SQL</button>
+        <button onclick="quickAskHelp('मेरा पढ़ने का मन नहीं कर रहा, मोटिवेट कीजिए')" class="px-2.5 py-1 bg-slate-900 border border-slate-700 hover:border-amber-400 rounded-lg text-amber-200 shrink-0">मोटिवेशन चाहिए</button>
+      </div>
+
+      <div id="help-chat-stream" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs leading-relaxed">
+        <div class="p-3.5 rounded-2xl bg-slate-900 border border-emerald-500/40 text-slate-100 space-y-1.5 shadow-md">
+          <div class="flex items-center justify-between font-bold text-emerald-400">
+            <span class="flex items-center space-x-1.5">
+              <i class="fa-solid fa-graduation-cap"></i>
+              <span>नमस्ते <span id="help-user-greeting">दीपक जी</span>! मैं आपकी पर्सनल टीचर प्रिया मैम हूँ।</span>
+            </span>
+          </div>
+          <p class="text-slate-200 leading-relaxed font-medium">
+            Data Analyst (Excel, SQL, Python, Power BI), Data Scientist, Data Engineer या AI Engineering में कोई भी समस्या आ रही हो — नीचे टाइप करें या माइक (🎙️) दबाकर पूछें। मैं हर कदम पर आपके साथ हूँ!
+          </p>
+        </div>
+      </div>
+
+      <div class="p-3 bg-slate-950 border-t border-slate-800 flex items-center space-x-2 shrink-0">
+        <button id="help-mic-btn" onclick="toggleHelpVoiceRecognition()" class="w-10 h-10 rounded-xl bg-slate-800 text-amber-400 border border-slate-700 flex items-center justify-center text-sm shadow hover:bg-slate-700" title="माइक से बोलकर सवाल पूछें">
+          <i class="fa-solid fa-microphone"></i>
+        </button>
+        <input type="text" id="help-query-input" placeholder="मैम से डेटा या AI का कोई भी सवाल या संशय पूछें..." onkeydown="if(event.key==='Enter') submitHelpQuery()" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-400">
+        <button onclick="submitHelpQuery()" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs rounded-xl shadow flex items-center space-x-1">
+          <span>पूछें</span>
+          <i class="fa-solid fa-paper-plane text-[10px]"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let learnerName = "दीपक जी";
+    let userXP = 350;
+    let questionsSolvedInSession = 0;
+
+    const MOTIVATIONAL_PRAISES = [
+      "अद्भुत {name}! आपकी सीखने की गति और लगन सचमुच एक उच्च कोटि के Lead Data & AI Engineer जैसी है!",
+      "लाजवाब उत्तर {name}! हर एक सही कोड आपको फॉर्च्यून 500 डेटा सिस्टम्स आर्किटेक्ट बनने के करीब ले जा रहा है!",
+      "बहुत खूब {name}! जटिल डेटा ट्रांसफॉर्मेशन और एल्गोरिदम पर आपकी पकड़ मजबूत होती जा रही है!",
+      "शानदार सफलता {name}! आपमें विश्वस्तरीय AI मॉडल्स, पाइपलाइन्स और डैशबोर्ड्स तैयार करने की पूरी प्रतिभा है!",
+      "गज़ब का प्रयास {name}! इसी एकाग्रता से 3000 सवालों का सफर तय करें, सफलता निश्चित है!"
+    ];
+
+    function triggerCelebration() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 90,
+          spread: 75,
+          origin: { y: 0.6 }
+        });
+      }
+      userXP += 50;
+      questionsSolvedInSession++;
+      const xpEl = document.getElementById('user-xp-score');
+      if (xpEl) xpEl.textContent = `${userXP} XP`;
+    }
+
+    /* ========================================================
+       THEME & COLOR LOGIC
+       ======================================================== */
+    const PRESET_THEMES = {
+      darkSlate: { bg: '#020617', panel: '#0f172a', header: '#090d16', card: '#1e293b', text: '#f8fafc', muted: '#94a3b8', accent: '#f59e0b', font: "'Inter', sans-serif" },
+      emeraldOasis: { bg: '#051911', panel: '#0a271c', header: '#04130d', card: '#113a2a', text: '#e6fbf2', muted: '#6ee7b7', accent: '#10b981', font: "'Inter', sans-serif" },
+      royalVelvet: { bg: '#140827', panel: '#1f0d3d', header: '#0c0419', card: '#2e1458', text: '#fae8ff', muted: '#c084fc', accent: '#d946ef', font: "'Inter', sans-serif" },
+      cyberNeon: { bg: '#040b14', panel: '#071626', header: '#02060c', card: '#0c223c', text: '#ecfeff', muted: '#67e8f9', accent: '#06b6d4', font: "'Fira Code', monospace" },
+      warmSepia: { bg: '#1d1712', panel: '#281f18', header: '#130e0b', card: '#3b2f25', text: '#fef3c7', muted: '#fde68a', accent: '#f59e0b', font: "'Georgia', serif" },
+      deepMidnight: { bg: '#000000', panel: '#0a0a0a', header: '#050505', card: '#141414', text: '#ffffff', muted: '#a1a1aa', accent: '#3b82f6', font: "'Inter', sans-serif" }
+    };
+
+    function toggleThemeModal() {
+      const modal = document.getElementById('theme-customizer-modal');
+      if (modal) {
+        modal.classList.toggle('hidden');
+        modal.classList.toggle('flex');
+      }
+    }
+
+    function applyPresetTheme(presetName) {
+      const t = PRESET_THEMES[presetName] || PRESET_THEMES.darkSlate;
+      setCustomRootCSS(t.bg, t.panel, t.header, t.card, t.text, t.muted, t.accent, t.font);
+      document.getElementById('theme-color-bg').value = t.bg;
+      document.getElementById('theme-color-text').value = t.text;
+      document.getElementById('theme-color-panel').value = t.panel;
+      document.getElementById('theme-color-accent').value = t.accent;
+      document.getElementById('theme-font-family').value = t.font;
+      speakText(`थीम बदल दी गई है ${learnerName}! चलिए डेटा और AI की गहराइयों में चलते हैं।`);
+    }
+
+    function updateCustomColors() {
+      const bg = document.getElementById('theme-color-bg')?.value || '#020617';
+      const text = document.getElementById('theme-color-text')?.value || '#f8fafc';
+      const panel = document.getElementById('theme-color-panel')?.value || '#0f172a';
+      const accent = document.getElementById('theme-color-accent')?.value || '#f59e0b';
+      const font = document.getElementById('theme-font-family')?.value || "'Inter', sans-serif";
+      setCustomRootCSS(bg, panel, bg, panel, text, '#94a3b8', accent, font);
+    }
+
+    function setCustomRootCSS(bg, panel, header, card, text, muted, accent, font) {
+      document.documentElement.style.setProperty('--bg-main', bg);
+      document.documentElement.style.setProperty('--bg-panel', panel);
+      document.documentElement.style.setProperty('--bg-header', header);
+      document.documentElement.style.setProperty('--card-bg', card);
+      document.documentElement.style.setProperty('--text-main', text);
+      document.documentElement.style.setProperty('--text-muted', muted);
+      document.documentElement.style.setProperty('--accent-color', accent);
+      document.documentElement.style.setProperty('--app-font-family', font);
+    }
+
+    function resetThemeToDefault() {
+      applyPresetTheme('darkSlate');
+    }
+
+    /* ========================================================
+       24/7 AI HELP & DOUBT SOLVER
+       ======================================================== */
+    let isHelpRecording = false;
+    let helpSpeechRecognition = null;
+
+    function toggleUniversalHelpModal() {
+      const modal = document.getElementById('universal-help-modal');
+      if (modal) {
+        modal.classList.toggle('hidden');
+        modal.classList.toggle('flex');
+        const greeting = document.getElementById('help-user-greeting');
+        if (greeting) greeting.textContent = learnerName;
+      }
+    }
+
+    function quickAskHelp(query) {
+      const inp = document.getElementById('help-query-input');
+      if (inp) {
+        inp.value = query;
+        submitHelpQuery();
+      }
+    }
+
+    function toggleHelpVoiceRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("आपके ब्राउज़र में वॉइस स्पीच उपलब्ध नहीं है। कृपया लिखकर पूछें।");
+        return;
+      }
+
+      const micBtn = document.getElementById('help-mic-btn');
+
+      if (isHelpRecording) {
+        if (helpSpeechRecognition) helpSpeechRecognition.stop();
+        isHelpRecording = false;
+        if (micBtn) micBtn.className = "w-10 h-10 rounded-xl bg-slate-800 text-amber-400 border border-slate-700 flex items-center justify-center text-sm shadow";
+        return;
+      }
+
+      helpSpeechRecognition = new SpeechRecognition();
+      helpSpeechRecognition.lang = appLanguage === 'hi' ? 'hi-IN' : 'en-US';
+      helpSpeechRecognition.continuous = false;
+
+      helpSpeechRecognition.onstart = () => {
+        isHelpRecording = true;
+        if (micBtn) micBtn.className = "w-10 h-10 rounded-xl bg-rose-600 text-white animate-pulse flex items-center justify-center text-sm shadow";
+      };
+
+      helpSpeechRecognition.onresult = (event) => {
+        const text = event.results[0][0].transcript;
+        const inp = document.getElementById('help-query-input');
+        if (inp) {
+          inp.value = text;
+          submitHelpQuery();
+        }
+      };
+
+      helpSpeechRecognition.onend = () => {
+        isHelpRecording = false;
+        if (micBtn) micBtn.className = "w-10 h-10 rounded-xl bg-slate-800 text-amber-400 border border-slate-700 flex items-center justify-center text-sm shadow";
+      };
+
+      helpSpeechRecognition.start();
+    }
+
+    function submitHelpQuery() {
+      const inp = document.getElementById('help-query-input');
+      const text = inp ? inp.value.trim() : '';
+      if (!text) return;
+
+      appendHelpMessage("user", text);
+      if (inp) inp.value = '';
+
+      const task = currentQuestionSet[activeQuestion];
+      const code = document.getElementById('code-input')?.value || '';
+
+      setTimeout(() => {
+        let response = "";
+        const lower = text.toLowerCase();
+
+        if (lower.includes("power bi") || lower.includes("dax")) {
+          response = `${learnerName}, Power BI में DAX (Data Analysis Expressions) एक्सेल फॉर्मूलों का सुपरचार्ज्ड रूप है। जब हम CALCULATE(SUM(Sales), Region="North") लिखते हैं, तो यह सीधे डेटा मॉडल के फिल्टर कॉन्टेक्स्ट को बदलकर सटीक KPI निकाल देता है।`;
+        } else if (lower.includes("sql") || lower.includes("join")) {
+          response = `${learnerName}, SQL Joins को ऐसे समझिए: INNER JOIN सिर्फ उन रिकॉर्ड्स को लाता है जो दोनों टेबलों में मौजूद हैं। LEFT JOIN बाईं टेबल का सारा डेटा रखता है चाहे दाईं टेबल में मैच मिले या न मिले।`;
+        } else if (lower.includes("मोटिवेशन") || lower.includes("मन नहीं")) {
+          response = `${learnerName}, आज डेटा एनालिस्ट और डेटा साइंटिस्ट दुनिया के सबसे मूल्यवान पेशेवरों में गिने जाते हैं। हर 15 मिनट की कोडिंग और एक-एक प्रश्न का समाधान आपको लाखों के पैकेज और शीर्ष करियर की ओर ले जा रहा है।`;
+        } else if (lower.includes("गलती") || lower.includes("एरर") || lower.includes("error")) {
+          response = `${learnerName}, वर्तमान सवाल में अपेक्षित परिणाम "${task.expected}" है। कृपया जांचें कि कोड में क्या प्रिंट हो रहा है। हिंट: ${task.hintHi}`;
+        } else {
+          response = `${learnerName}, इस सवाल (${task.titleHi}) के लिए आपको एडिटर में मान '${task.expected}' का सटीक कोड लिखकर 'रन करें और जांचें' दबाना है। कोई संकोच न करें, मैं हर कदम पर आपके साथ हूँ!`;
+        }
+
+        appendHelpMessage("tutor", response);
+        speakText(response);
+      }, 400);
+    }
+
+    function appendHelpMessage(sender, text) {
+      const stream = document.getElementById('help-chat-stream');
+      if (!stream) return;
+
+      const card = document.createElement('div');
+      if (sender === "user") {
+        card.className = "p-3 rounded-2xl bg-blue-950/70 border border-blue-500/40 text-blue-100 text-right space-y-1 font-medium";
+        card.innerHTML = `<span class="text-[10px] text-blue-400 font-bold block">${learnerName} का प्रश्न:</span>${escapeHtml(text)}`;
+      } else {
+        card.className = "p-3.5 rounded-2xl bg-slate-900 border border-emerald-500/40 text-slate-100 space-y-1.5 shadow-md";
+        card.innerHTML = `
+          <div class="flex items-center justify-between font-bold text-emerald-400">
+            <span class="flex items-center space-x-1.5">
+              <i class="fa-solid fa-graduation-cap"></i>
+              <span>प्रिया मैम का समाधान:</span>
+            </span>
+            <button onclick="speakText('${text.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-emerald-300 text-xs">
+              <i class="fa-solid fa-volume-high"></i>
+            </button>
+          </div>
+          <p class="text-slate-200 leading-relaxed font-medium">${text}</p>
+        `;
+      }
+
+      stream.appendChild(card);
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    /* ========================================================
+       FACULTY & PROFILE MANAGEMENT
+       ======================================================== */
+    let isAvatarSpeaking = false;
+    let facultyPhotoUrl = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80";
+
+    function promptChangeLearnerName() {
+      const name = prompt("कृपया अपना शुभ नाम दर्ज करें:", learnerName);
+      if (name && name.trim()) {
+        learnerName = name.trim();
+        document.getElementById('header-user-display').textContent = learnerName;
+        renderAppView();
+        speakText(`बहुत-बहुत स्वागत है ${learnerName}! अब हम डेटा और AI इंजीनियरिंग के हर पड़ाव को गहराई से जीतेंगे।`);
+      }
+    }
+
+    function promptChangeFacultyPhoto() {
+      const choice = prompt("प्रिया मैम की फ़ोटो बदलने के लिए किसी भी फ़ोटो का वेब लिंक (Image URL) यहाँ पेस्ट करें:", facultyPhotoUrl);
+      if (choice && choice.trim()) {
+        facultyPhotoUrl = choice.trim();
+        const img = document.getElementById('faculty-photo-img');
+        if (img) img.src = facultyPhotoUrl;
+        speakText(`फ़ोटो सफलतापूर्वक अपडेट कर दी गई है ${learnerName}! चलिए पूरी एकाग्रता से क्लास शुरू करते हैं।`);
+      }
+    }
+
+    function updateAvatarVisualPulse(speaking) {
+      isAvatarSpeaking = speaking;
+      const glow = document.getElementById('avatar-glow-ring');
+      const img = document.getElementById('faculty-photo-img');
+
+      if (speaking) {
+        if (glow) glow.className = "absolute inset-0 rounded-full bg-gradient-to-tr from-amber-400 via-rose-500 to-amber-300 opacity-90 blur-md animate-pulse transition-all duration-300 scale-110";
+        if (img) img.style.transform = "scale(1.05)";
+      } else {
+        if (glow) glow.className = "absolute inset-0 rounded-full bg-gradient-to-tr from-amber-400 via-rose-500 to-amber-300 opacity-40 blur-md transition-all duration-300";
+        if (img) img.style.transform = "scale(1)";
+      }
+    }
+
+    function triggerFacultyWelcome() {
+      const track = ALL_COURSES[activeTrack];
+      const ch = track.chapters[activeChapter] || track.chapters[0];
+      const msg = `नमस्ते ${learnerName}! मैं आपकी डेटा व AI फ़ैकल्टी प्रिया मैम हूँ। आज हम मिलकर ${ch.titleHi} को 3000 व्यावहारिक प्रश्नों के साथ सीखेंगे। सामने दिए गए सवाल को देखिए, हम साथ मिलकर इसे हल करेंगे!`;
+      speakText(msg);
+    }
+
+    function speakCurrentChapterTheory() {
+      const track = ALL_COURSES[activeTrack];
+      const ch = track.chapters[activeChapter] || track.chapters[0];
+      const speech = `अध्याय का नाम: ${ch.titleHi}। १. यह क्या है? ${ch.whatIsItHi}। २. इसका उपयोग क्यों करते हैं? ${ch.whyUseItHi}। ३. ऐसा करने पर क्या होगा? ${ch.whatHappensHi}`;
+      speakTextWithHighlight(speech, 'theory-container');
+    }
+
+    function speakTaskStatement() {
+      const q = currentQuestionSet[activeQuestion];
+      speakTextWithHighlight(`सवाल संख्या ${q.qNum}: ${q.titleHi}। ${q.descHi}`, 'task-desc');
+    }
+
+    function speakStepGuide() {
+      const q = currentQuestionSet[activeQuestion];
+      speakTextWithHighlight(`कदम-दर-कदम निर्देश: ${q.stepsHi}`, 'task-steps-text');
+    }
+
+    function speakHintText() {
+      const q = currentQuestionSet[activeQuestion];
+      speakTextWithHighlight(`मैम का हिंट: ${q.hintHi}`, 'task-hint-text');
+    }
+
+    function speakExpectedResult() {
+      const q = currentQuestionSet[activeQuestion];
+      speakText(`अपेक्षित परिणाम है: ${q.expected}`);
+    }
+
+    function speakTerminalOutput() {
+      const out = document.getElementById('terminal-screen').textContent;
+      speakText(`टर्मिनल का आउटपुट है: ${out}`);
+    }
+
+    function speakText(text) {
+      speakTextWithHighlight(text, null);
+    }
+
+    function speakTextWithHighlight(text, targetElementId) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      clearTextHighlights();
+
+      const cleanText = text.replace(/<[^>]*>?/gm, '');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = appLanguage === 'hi' ? 'hi-IN' : 'en-US';
+      utterance.rate = 0.94;
+
+      const indicator = document.getElementById('global-speech-indicator');
+      let targetEl = targetElementId ? document.getElementById(targetElementId) : null;
+      let wordSpans = [];
+
+      if (targetEl && targetEl.textContent.trim()) {
+        const originalWords = targetEl.textContent.trim().split(/\s+/);
+        targetEl.innerHTML = originalWords.map(w => `<span>${escapeHtml(w)}</span>`).join(' ');
+        wordSpans = Array.from(targetEl.querySelectorAll('span'));
+      }
+
+      utterance.onboundary = (e) => {
+        if (e.name === 'word' && wordSpans.length > 0) {
+          const charIndex = e.charIndex;
+          const textUpToChar = cleanText.substring(0, charIndex);
+          const currentWordIdx = textUpToChar.trim().split(/\s+/).length - 1;
+
+          clearTextHighlights();
+          if (wordSpans[currentWordIdx]) {
+            wordSpans[currentWordIdx].classList.add('word-spoken');
+          }
+        }
+      };
+
+      utterance.onstart = () => {
+        updateAvatarVisualPulse(true);
+        setFacultyDialogue(cleanText.substring(0, 95) + '...');
+        if (indicator) {
+          indicator.classList.remove('hidden');
+          indicator.classList.add('flex');
+        }
+      };
+
+      utterance.onend = () => {
+        updateAvatarVisualPulse(false);
+        clearTextHighlights();
+        setFacultyDialogue(`${learnerName}, आप जितनी बार चाहें अभ्यास कर सकते हैं। 3000 प्रश्नों का पूरा सफर हम साथ तय करेंगे।`);
+        if (indicator) {
+          indicator.classList.add('hidden');
+          indicator.classList.remove('flex');
+        }
+      };
+
+      utterance.onerror = () => {
+        updateAvatarVisualPulse(false);
+        clearTextHighlights();
+        if (indicator) {
+          indicator.classList.add('hidden');
+          indicator.classList.remove('flex');
+        }
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function clearTextHighlights() {
+      document.querySelectorAll('.word-spoken').forEach(el => el.classList.remove('word-spoken'));
+    }
+
+    function setFacultyDialogue(text) {
+      const p = document.getElementById('faculty-dialogue');
+      if (p) p.textContent = `"${text}"`;
+    }
+
+    function stopAllSpeech() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      updateAvatarVisualPulse(false);
+      clearTextHighlights();
+      const indicator = document.getElementById('global-speech-indicator');
+      if (indicator) {
+        indicator.classList.add('hidden');
+        indicator.classList.remove('flex');
+      }
+      setFacultyDialogue(`पढ़ाई जारी रखें ${learnerName}! मैं हमेशा आपके साथ हूँ।`);
+    }
+
+    /* ========================================================
+       COMPLETE CURRICULUM REGISTRY (INCLUDING ALL NEW ROADMAPS)
+       ======================================================== */
+    const ALL_COURSES = {
+      // 1. DATA ANALYST: COMPLETE EXCEL (9 MODULES)
+      da_excel: {
+        id: "da_excel",
+        name: "Data Analyst: Complete Excel (9 Modules)",
+        filename: "excel_analytics.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Excel Basics - इंटरफेस और वर्कबुक", whatIsItHi: "एक्सेल डेटा विश्लेषण की रीढ़ है, जिसमें ग्रिड, सेल्स, रोज़ और कॉलम्स होते हैं।", whyUseItHi: "कच्चे व्यापारिक डेटा को व्यवस्थित और समरी बनाने के लिए।", whatHappensHi: "डेटा व्यवस्थित होते ही विश्लेषण के लिए तैयार हो जाता है।", stepsHi: "एक्सेल स्टेटस 'Excel Grid Initialized' प्रिंट करें।", theoryCode: `print("Excel Grid Initialized")` },
+          { id: 1, titleHi: "मॉड्यूल 2: Data Types (Text, Number, Date, Currency)", whatIsItHi: "एक्सेल में डेटा का सही प्रकार पहचानना ताकि फॉर्मूले गलत न हों।", whyUseItHi: "टेक्स्ट और नंबर के बीच गणितीय त्रुटियों को रोकने के लिए।", whatHappensHi: "सही डेटा टाइप पर ऑपरेशन्स 100% सटीक परिणाम देते हैं।", stepsHi: "डेटा टाइप 'DataType: Currency' प्रिंट करें।", theoryCode: `print("DataType: Currency")` },
+          { id: 2, titleHi: "मॉड्यूल 3: Basic Formulas (SUM, AVERAGE, MIN, MAX, COUNT)", whatIsItHi: "मूलभूत गणितीय और सांख्यिकीय फॉर्मूले।", whyUseItHi: "लाखों पंक्तियों का कुल योग और औसत 1 सेकंड में निकालने के लिए।", whatHappensHi: "फॉर्मूला पूरे कॉलम पर तुरंत लागू हो जाता है।", stepsHi: "सम मान 'SUM: 50000' प्रिंट करें।", theoryCode: `print("SUM: 50000")` },
+          { id: 3, titleHi: "मॉड्यूल 4: Logical Functions (IF, IFS, AND, OR, NOT)", whatIsItHi: "शर्तों के आधार पर निर्णय लेने वाले तार्किक फॉर्मूले।", whyUseItHi: "टारगेट पूरा होने पर बोनस या टैक्स स्लैब तय करने के लिए।", whatHappensHi: "कंडीशन ट्रू होने पर सही परिणाम खुद निकलता है।", stepsHi: "कंडीशन रिजल्ट 'High Value Customer' प्रिंट करें।", theoryCode: `print("High Value Customer")` },
+          { id: 4, titleHi: "मॉड्यूल 5: Lookup Functions (VLOOKUP, XLOOKUP, INDEX-MATCH)", whatIsItHi: "दूसरी शीट से आईडी के आधार पर डेटा खोजना।", whyUseItHi: "ग्राहक आईडी देखकर उसका नाम और बकाया राशि तुरंत निकालने के लिए।", whatHappensHi: "XLOOKUP दोनों दिशाओं में तेज़ और लचीली खोज करता है।", stepsHi: "लुकअप मान 'Matched: Priya' प्रिंट करें।", theoryCode: `print("Matched: Priya")` },
+          { id: 5, titleHi: "मॉड्यूल 6: Data Cleaning (TRIM, PROPER, TEXTSPLIT, Remove Duplicates)", whatIsItHi: "कच्चे डेटा से फालतू स्पेस, गलत केस और डुप्लीकेट्स हटाना।", whyUseItHi: "ताकि गंदे डेटा से गलत बिजनेस निर्णय न लिए जाएं।", whatHappensHi: "डेटा क्लीन और विश्लेषण के लिए शुद्ध हो जाता है।", stepsHi: "क्लीन स्टेटस 'Cleaned Rows: 1000' प्रिंट करें।", theoryCode: `print("Cleaned Rows: 1000")` },
+          { id: 6, titleHi: "मॉड्यूल 7: Pivot Tables - Dynamic Aggregations", whatIsItHi: "बिना फॉर्मूला लिखे लाखों रिकॉर्ड्स की समरी बनाने वाला टूल।", whyUseItHi: "महीने और रीजन वाइज बिक्री का विश्लेषण करने के लिए।", whatHappensHi: "ड्रैग एंड ड्रॉप से तुरंत क्रॉस-टैब रिपोर्ट तैयार होती है।", stepsHi: "पिवट स्टेटस 'Pivot Table Generated' प्रिंट करें।", theoryCode: `print("Pivot Table Generated")` },
+          { id: 7, titleHi: "मॉड्यूल 8: Pivot Charts & Dynamic Slicers", whatIsItHi: "पिवट टेबल से जुड़े इंटरएक्टिव ग्राफ्स और फिल्टर स्लाइसर्स।", whyUseItHi: "मैनेजर्स को 1-क्लिक में विजुअल इनसाइट्स देने के लिए।", whatHappensHi: "स्लाइसर पर क्लिक करते ही पूरे चार्ट्स अपडेट हो जाते हैं।", stepsHi: "चार्ट स्टेटस 'Dynamic Slicer Active' प्रिंट करें।", theoryCode: `print("Dynamic Slicer Active")` },
+          { id: 8, titleHi: "मॉड्यूल 9: Excel Dashboard - Executive Level Reporting", whatIsItHi: "सारे चार्ट्स, KPIs और स्लाइसर्स को मिलाकर एक सिंगल-स्क्रीन एग्जीक्यूटिव डैशबोर्ड बनाना।", whyUseItHi: "सीईओ और डायरेक्टर्स के सामने कंपनी की स्थिति पेश करने के लिए।", whatHappensHi: "सभी मुख्य मैट्रिक्स एक स्क्रीन पर लाइव दिखते हैं।", stepsHi: "डैशबोर्ड स्टेटस 'Executive Dashboard Ready' प्रिंट करें।", theoryCode: `print("Executive Dashboard Ready")` }
+        ]
+      },
+
+      // 2. DATA ANALYST: COMPLETE SQL (10 MODULES)
+      da_sql: {
+        id: "da_sql",
+        name: "Data Analyst: Complete SQL Mastery (10 Modules)",
+        filename: "sql_queries.sql",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Database Basics & RDBMS Architecture", whatIsItHi: "रिलेशनल डेटाबेस का ढांचा जहां डेटा टेबल्स में रहता है।", whyUseItHi: "अरबों रिकॉर्ड्स को सुरक्षित और संरचित रखने के लिए।", whatHappensHi: "ACID प्रॉपर्टीज डेटा की विश्वसनीयता बनाए रखती हैं।", stepsHi: "DB स्टेटस 'RDBMS Engine Active' प्रिंट करें।", theoryCode: `print("RDBMS Engine Active")` },
+          { id: 1, titleHi: "मॉड्यूल 2: SQL Syntax & Data Definition (CREATE, ALTER, DROP)", whatIsItHi: "डेटाबेस और टेबल्स बनाने और बदलने की संरचनात्मक भाषा।", whyUseItHi: "नया डेटाबेस स्कीमा और कंस्ट्रेंट्स तैयार करने के लिए।", whatHappensHi: "टेबल स्कीमा डेटाबेस में पंजीकृत हो जाता है।", stepsHi: "स्कीमा स्टेटस 'Table Customers Created' प्रिंट करें।", theoryCode: `print("Table Customers Created")` },
+          { id: 2, titleHi: "मॉड्यूल 3: SELECT Statements & Column Projections", whatIsItHi: "डेटाबेस से मनचाहे कॉलम्स का डेटा बाहर निकालना।", whyUseItHi: "ताकि केवल आवश्यक जानकारी ही स्क्रीन पर आए।", whatHappensHi: "क्वेरी मेमोरी में परिणाम सेट लौटाती है।", stepsHi: "SELECT परिणाम 'Selected: 5 Columns' प्रिंट करें।", theoryCode: `print("Selected: 5 Columns")` },
+          { id: 3, titleHi: "मॉड्यूल 4: WHERE Clause & Filtering Logic (LIKE, IN, BETWEEN)", whatIsItHi: "शर्तों के अनुसार पंक्तियों को छांटना।", whyUseItHi: "केवल पटना शहर या 10,000 से अधिक बिक्री वाले ग्राहक देखने के लिए।", whatHappensHi: "कंडीशन मैच करने वाली पंक्तियां ही फिल्टर होती हैं।", stepsHi: "फिल्टर स्टेटस 'Filtered: 42 Records' प्रिंट करें।", theoryCode: `print("Filtered: 42 Records")` },
+          { id: 4, titleHi: "मॉड्यूल 5: ORDER BY & Sorting Algorithms", whatIsItHi: "डेटा को आरोही (ASC) या अवरोही (DESC) क्रम में सजाना।", whyUseItHi: "टॉप 10 सबसे बड़े ऑर्डर्स या सबसे पुराने ग्राहक खोजने के लिए।", whatHappensHi: "इंडेक्स के आधार पर डेटा सॉर्ट हो जाता है।", stepsHi: "सॉर्ट स्टेटस 'Sorted by Revenue DESC' प्रिंट करें।", theoryCode: `print("Sorted by Revenue DESC")` },
+          { id: 5, titleHi: "मॉड्यूल 6: Aggregate Functions (COUNT, SUM, AVG, MIN, MAX)", whatIsItHi: "कॉलम के सभी मानों पर गणितीय संक्षेपण करना।", whyUseItHi: "कुल राजस्व या औसत ऑर्डर वैल्यू तुरंत निकालने के लिए।", whatHappensHi: "लाखों रिकॉर्ड्स एक एकल समरी संख्या में बदल जाते हैं।", stepsHi: "एग्रीगेट मान 'AVG_Order_Value: 1250' प्रिंट करें।", theoryCode: `print("AVG_Order_Value: 1250")` },
+          { id: 6, titleHi: "मॉड्यूल 7: GROUP BY - Segmenting Business Data", whatIsItHi: "समान श्रेणियों के डेटा को समूहों में बांटना।", whyUseItHi: "कैटेगरी वाइज या राज्य वाइज कुल बिक्री जानने के लिए।", whatHappensHi: "डेटा ग्रुप्स में विभाजित होकर संक्षेपित होता है।", stepsHi: "ग्रुप काउंट 'Groups: 8 Categories' प्रिंट करें।", theoryCode: `print("Groups: 8 Categories")` },
+          { id: 7, titleHi: "मॉड्यूल 8: HAVING Clause vs WHERE Clause", whatIsItHi: "एग्रीगेटेड ग्रुप्स पर शर्तें लगाना।", whyUseItHi: "सिर्फ उन्हीं कैटेगरी को दिखाना जिनकी कुल बिक्री 10 लाख से अधिक हो।", whatHappensHi: "ग्रुप बनने के बाद फिल्टर लागू होता है।", stepsHi: "HAVING स्टेटस 'HAVING SUM > 1000000' प्रिंट करें।", theoryCode: `print("HAVING SUM > 1000000")` },
+          { id: 8, titleHi: "मॉड्यूल 9: SQL Joins (INNER, LEFT, RIGHT, FULL, CROSS)", whatIsItHi: "अलग-अलग टेबल्स को प्राइमरी व फॉरेन की से जोड़ना।", whyUseItHi: "ग्राहक और उनके ऑर्डर्स का संयुक्त विवरण देखने के लिए।", whatHappensHi: "दोनों टेबल्स का मिलान होकर संयुक्त टेबल बनती है।", stepsHi: "जॉइन रिजल्ट 'Joined: Orders + Customers' प्रिंट करें।", theoryCode: `print("Joined: Orders + Customers")` },
+          { id: 9, titleHi: "मॉड्यूल 10: Subqueries & Common Table Expressions (CTEs)", whatIsItHi: "एक क्वेरी के अंदर दूसरी क्वेरी या WITH क्लॉज द्वारा टेम्परेरी टेबल बनाना।", whyUseItHi: "जटिल मल्टी-लेवल बिजनेस लॉजिक को सरल और पठनीय बनाने के लिए।", whatHappensHi: "सबक्वेरी का परिणाम मुख्य क्वेरी को इनपुट के रूप में मिलता है।", stepsHi: "CTE आउटपुट 'CTE Execution Complete' प्रिंट करें।", theoryCode: `print("CTE Execution Complete")` }
+        ]
+      },
+
+      // 3. DATA ANALYST: PYTHON FOR DATA ANALYSIS (10 MODULES)
+      da_python: {
+        id: "da_python",
+        name: "Data Analyst: Python for Data Analysis (10 Modules)",
+        filename: "python_analysis.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Python Basics for Data Analysis", whatIsItHi: "डेटा एनालिस्ट के लिए आवश्यक पायथन की मूलभूत नींव।", whyUseItHi: "एक्सेल की सीमाओं से आगे निकलकर करोड़ों पंक्तियां प्रोसेस करने के लिए।", whatHappensHi: "स्क्रिप्ट डेटा को मेमोरी में लोड करके प्रोसेस करती है।", stepsHi: "पायथन स्टेटस 'Python Analytics Active' प्रिंट करें।", theoryCode: `print("Python Analytics Active")` },
+          { id: 1, titleHi: "मॉड्यूल 2: Data Structures (Lists, Tuples, Dictionaries, Sets)", whatIsItHi: "डेटा को व्यवस्थित और एक्सेस करने के इन-बिल्ट कंटेनर्स।", whyUseItHi: "की-वैल्यू पेयर्स में मेट्रिक्स और डेटा रिकॉर्ड्स स्टोर करने के लिए।", whatHappensHi: "डेटा स्ट्रक्चर्स O(1) या O(N) में तेज एक्सेस देते हैं।", stepsHi: "डेटा स्ट्रक्चर 'Dict Length: 5' प्रिंट करें।", theoryCode: `print("Dict Length: 5")` },
+          { id: 2, titleHi: "मॉड्यूल 3: Conditional Statements in Data Pipelines", whatIsItHi: "डेटा वैलिडेशन और बिजनेस रूल्स के लिए if-elif-else लॉजिक।", whyUseItHi: "खराब या विसंगत डेटा को पाइपलाइन में आगे जाने से रोकने के लिए।", whatHappensHi: "शर्त सही होने पर ही ट्रांसफॉर्मेशन होता है।", stepsHi: "कंडीशन स्टेटस 'Valid Record Passed' प्रिंट करें।", theoryCode: `print("Valid Record Passed")` },
+          { id: 3, titleHi: "मॉड्यूल 4: Python Loops (for, while, list comprehensions)", whatIsItHi: "डेटा के हर रिकॉर्ड पर बार-बार ऑपरेशन चलाने का चक्र।", whyUseItHi: "सैकड़ों फाइलों को एक साथ लूप करके लोड करने के लिए।", whatHappensHi: "लिस्ट कॉम्प्रिहेंशन से कोड 3 गुना तेज चलता है।", stepsHi: "लूप आउटपुट 'Processed: 100 Files' प्रिंट करें।", theoryCode: `print("Processed: 100 Files")` },
+          { id: 4, titleHi: "मॉड्यूल 5: Python Functions & Lambda Expressions", whatIsItHi: "डेटा ट्रांसफॉर्मेशन के दोबारा इस्तेमाल होने वाले ब्लॉक्स।", whyUseItHi: "सफाई और गणना के कोड को एक समान और संक्षिप्त रखने के लिए।", whatHappensHi: "कॉलम पर फंक्शन मैप होकर तुरंत मान बदलता है।", stepsHi: "फंक्शन आउटपुट 'Transformed via Lambda' प्रिंट करें।", theoryCode: `print("Transformed via Lambda")` },
+          { id: 5, titleHi: "मॉड्यूल 6: NumPy Basics & Vectorized Computations", whatIsItHi: "सुपरफास्ट ऐरे ऑपरेशन्स के लिए सी-आधारित लाइब्रेरी।", whyUseItHi: "गणितीय गणनाओं को सामान्य लूप्स से 50 गुना तेज करने के लिए।", whatHappensHi: "वेक्टराइज्ड ऑपरेशन्स पूरे ऐरे पर एक साथ लागू होते हैं।", stepsHi: "NumPy शेप 'Shape: (1000, 10)' प्रिंट करें।", theoryCode: `print("Shape: (1000, 10)")` },
+          { id: 6, titleHi: "मॉड्यूल 7: Pandas Basics & Series Objects", whatIsItHi: "डेटा एनालिसिस का मुख्य टूल जिसमें लेबल युक्त 1D सीरीज होती है।", whyUseItHi: "टाइम-सीरीज और वित्तीय डेटा को इंडेक्स के साथ संभालने के लिए।", whatHappensHi: "सीरीज इंडेक्सिंग से डेटा तुरंत एक्सेस होता है।", stepsHi: "सीरीज स्टेटस 'Pandas Series Ready' प्रिंट करें।", theoryCode: `print("Pandas Series Ready")` },
+          { id: 7, titleHi: "मॉड्यूल 8: DataFrames - The Heart of Data Analysis", whatIsItHi: "पंक्तियों और स्तंभों वाली 2D सारणी।", whyUseItHi: "लाखों रिकॉर्ड्स के CSV और SQL डेटा को टेबल फॉर्मेट में लोड करने के लिए।", whatHappensHi: "df.head() पहले 5 रिकॉर्ड्स तुरंत दिखाता है।", stepsHi: "डेटाफ्रेम डाइमेंशन 'DataFrame Loaded: (5000, 12)' प्रिंट करें।", theoryCode: `print("DataFrame Loaded: (5000, 12)")` },
+          { id: 8, titleHi: "मॉड्यूल 9: Data Cleaning with Pandas (dropna, fillna, replace)", whatIsItHi: "मिसिंग वैल्यूज (NaN) को भरना या हटाना।", whyUseItHi: "अधूरे डेटा से गलत विश्लेषण और प्रिडिक्शन को रोकने के लिए।", whatHappensHi: "डेटा क्लीन और विश्लेषण के लिए विश्वसनीय बन जाता है।", stepsHi: "क्लीन स्टेटस 'Null Values Imputed' प्रिंट करें।", theoryCode: `print("Null Values Imputed")` },
+          { id: 9, titleHi: "मॉड्यूल 10: Data Manipulation (merge, concat, pivot_table)", whatIsItHi: "मल्टीपल डेटाफ्रेम्स को जोड़ना और रि-शेप करना।", whyUseItHi: "अलग-अलग विभागों के डेटा को एक मास्टर शीट में मिलाने के लिए।", whatHappensHi: "मर्ज किया गया डेटाफ्रेम 360-डिग्री व्यू देता है।", stepsHi: "मैनिपुलेशन रिजल्ट 'Master Table Created' प्रिंट करें।", theoryCode: `print("Master Table Created")` }
+        ]
+      },
+
+      // 4. DATA ANALYST: BUSINESS STATISTICS & EDA (10 MODULES)
+      da_stats: {
+        id: "da_stats",
+        name: "Data Analyst: Business Statistics & EDA (10 Modules)",
+        filename: "statistics_eda.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Descriptive Statistics Overview", whatIsItHi: "डेटा के आकार, केंद्र और फैलाव का सांख्यिकीय सारांश।", whyUseItHi: "लाखों पंक्तियों के डेटा को 3 संख्याओं में समझने के लिए।", whatHappensHi: "डेटा का समग्र व्यवहार स्पष्ट हो जाता है।", stepsHi: "समरी स्टेटस 'Descriptive Summary Generated' प्रिंट करें।", theoryCode: `print("Descriptive Summary Generated")` },
+          { id: 1, titleHi: "मॉड्यूल 2: Mean - Central Tendency", whatIsItHi: "सभी मानों का गणितीय औसत।", whyUseItHi: "प्रति ग्राहक औसत खर्च या औसत वेतन निकालने के लिए।", whatHappensHi: "केंद्रीय मान का पता चलता है।", stepsHi: "मीन मान 'Mean: 4500.5' प्रिंट करें।", theoryCode: `print("Mean: 4500.5")` },
+          { id: 2, titleHi: "मॉड्यूल 3: Median - Robust Center Against Outliers", whatIsItHi: "डेटा को क्रम में लगाने पर ठीक बीच वाला मान।", whyUseItHi: "जब डेटा में बिल गेट्स जैसे अरबपति हों तो औसत गलत न दिखे।", whatHappensHi: "आउटलायर्स से अप्रभावित केंद्र मिलता है।", stepsHi: "मीडियन मान 'Median: 3200' प्रिंट करें।", theoryCode: `print("Median: 3200")` },
+          { id: 3, titleHi: "मॉड्यूल 4: Mode - Most Frequent Business Occurrences", whatIsItHi: "डेटा में सबसे ज्यादा बार आने वाला मान।", whyUseItHi: "दुकान में सबसे ज्यादा बिकने वाले जूते का साइज जानने के लिए।", whatHappensHi: "लोकप्रिय श्रेणी सामने आ जाती है।", stepsHi: "मोड मान 'Mode: Size 8' प्रिंट करें।", theoryCode: `print("Mode: Size 8")` },
+          { id: 4, titleHi: "मॉड्यूल 5: Standard Deviation & Variance", whatIsItHi: "डेटा का औसत से कितना फैलाव या विचलन है।", whyUseItHi: "शेयर बाज़ार या बिक्री की अस्थिरता (Risk/Volatility) मापने के लिए।", whatHappensHi: "कम स्टैंडर्ड डेविएशन स्थिरता दिखाता है।", stepsHi: "मान 'StdDev: 14.2' प्रिंट करें।", theoryCode: `print("StdDev: 14.2")` },
+          { id: 5, titleHi: "मॉड्यूल 6: Probability Basics for Business Decisions", whatIsItHi: "किसी घटना के घटित होने की संभावना का गणित।", whyUseItHi: "ग्राहक द्वारा कार्ट छोड़ने या लोन डिफॉल्ट करने की संभावना मापने के लिए।", whatHappensHi: "0 से 1 के बीच संभावना मान मिलता है।", stepsHi: "प्रोबेबिलिटी मान 'Prob: 0.85' प्रिंट करें।", theoryCode: `print("Prob: 0.85")` },
+          { id: 6, titleHi: "मॉड्यूल 7: Data Distributions (Normal, Binomial, Uniform)", whatIsItHi: "डेटा के फैलाव का प्राकृतिक आकार।", whyUseItHi: "प्रकृति और व्यापार के अधिकांश डेटा गॉसियन नॉर्मल डिस्ट्रीब्यूशन पर चलते हैं।", whatHappensHi: "68-95-99.7 नियम से डेटा का विश्लेषण आसान होता है।", stepsHi: "डिस्ट्रीब्यूशन स्टेटस 'Bell Curve Verified' प्रिंट करें।", theoryCode: `print("Bell Curve Verified")` },
+          { id: 7, titleHi: "मॉड्यूल 8: Correlation Analysis (Pearson & Spearman)", whatIsItHi: "दो चरों के बीच का संबंध (जैसे विज्ञापन खर्च और बिक्री)।", whyUseItHi: "यह जानने के लिए कि क्या विज्ञापन बढ़ाने से सच में बिक्री बढ़ रही है।", whatHappensHi: "+1.0 मजबूत सीधा संबंध दिखाता है।", stepsHi: "सह-संबंध मान 'Correlation: +0.89' प्रिंट करें।", theoryCode: `print("Correlation: +0.89")` },
+          { id: 8, titleHi: "मॉड्यूल 9: Outlier Detection (IQR & Z-Score Method)", whatIsItHi: "सामान्य पैटर्न से बहुत अलग हटकर दिखने वाले मान (जैसे ₹10 की जगह ₹1,00,000)।", whyUseItHi: "फ्रॉड पकड़ने या डेटा एंट्री की गलतियों को ठीक करने के लिए।", whatHappensHi: "IQR विधि से सीमा से बाहर के पॉइंट्स पकड़े जाते हैं।", stepsHi: "आउटलायर स्टेटस 'Outliers Detected: 12' प्रिंट करें।", theoryCode: `print("Outliers Detected: 12")` },
+          { id: 9, titleHi: "मॉड्यूल 10: Exploratory Data Analysis (EDA) Framework", whatIsItHi: "डेटा को गहराई से खंगालकर व्यापारिक रहस्यों को बाहर लाना।", whyUseItHi: "मॉडल बनाने से पहले डेटा की हर कमी और पैटर्न को समझने के लिए।", whatHappensHi: "डेटा से महत्वपूर्ण व्यापारिक अंतर्दृष्टि (Insights) निकलती हैं।", stepsHi: "EDA स्टेटस 'EDA Pipeline Completed' प्रिंट करें।", theoryCode: `print("EDA Pipeline Completed")` }
+        ]
+      },
+
+      // 5. DATA ANALYST: POWER BI & DASHBOARDS (10 MODULES)
+      da_powerbi: {
+        id: "da_powerbi",
+        name: "Data Analyst: Power BI & Dashboards (10 Modules)",
+        filename: "powerbi_model.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Power BI Overview & Ecosystem", whatIsItHi: "माइक्रोसॉफ्ट का अग्रणी बिजनेस इंटेलिजेंस प्लेटफॉर्म।", whyUseItHi: "कच्चे डेटा को रंगीन और इंटरएक्टिव विजुअल रिपोर्ट्स में बदलने के लिए।", whatHappensHi: "बिजनेस लीडर्स 1 सेकंड में कंपनी की सेहत देख पाते हैं।", stepsHi: "Power BI स्टेटस 'PowerBI Engine Ready' प्रिंट करें।", theoryCode: `print("PowerBI Engine Ready")` },
+          { id: 1, titleHi: "मॉड्यूल 2: Data Import (Excel, SQL, Web, CSV Connectors)", whatIsItHi: "सैकड़ों विभिन्न स्रोतों से डेटा को Power BI में खींचना।", whyUseItHi: "विभिन्न विभागों के डेटा को एक प्लेटफॉर्म पर लाने के लिए।", whatHappensHi: "डेटा मॉडल में इनपुट डेटा लोड हो जाता है।", stepsHi: "इंपोर्ट स्टेटस 'Connected to SQL Database' प्रिंट करें।", theoryCode: `print("Connected to SQL Database")` },
+          { id: 2, titleHi: "मॉड्यूल 3: Power Query - Automated ETL Engine", whatIsItHi: "डेटा को ट्रांसफॉर्म और क्लीन करने वाला ऑटोमेशन टूल।", whyUseItHi: "हर महीने आने वाले नए डेटा को बिना हाथ लगाए ऑटो-क्लीन करने के लिए।", whatHappensHi: "अप्लाई किए गए स्टेप्स हर रिफ्रेश पर खुद चलते हैं।", stepsHi: "पावर क्वेरी स्टेटस 'Power Query Applied Steps: 14' प्रिंट करें।", theoryCode: `print("Power Query Applied Steps: 14")` },
+          { id: 3, titleHi: "मॉड्यूल 4: Data Transformation (Pivoting, Splitting, Merging)", whatIsItHi: "कॉलम्स को अन-पिवट करना और टेक्स्ट को विभाजित करना।", whyUseItHi: "डेटा को स्टार स्कीमा के अनुकूल बनाने के लिए।", whatHappensHi: "डेटा नॉर्मलाइज हो जाता है।", stepsHi: "ट्रांसफॉर्म स्टेटस 'Unpivoted Columns Complete' प्रिंट करें।", theoryCode: `print("Unpivoted Columns Complete")` },
+          { id: 4, titleHi: "मॉड्यूल 5: Data Modeling (Fact & Dimension Tables)", whatIsItHi: "डेटा को फैक्ट (बिक्री/लेनदेन) और डायमेंशन (ग्राहक/तारीख) में बांटना।", whyUseItHi: "रिपोर्ट की गति को 100 गुना तेज करने और फॉर्मूलों को सरल रखने के लिए।", whatHappensHi: "सुंदर और कुशल स्टार स्कीमा बनता है।", stepsHi: "मॉडलिंग स्टेटस 'Star Schema Configured' प्रिंट करें।", theoryCode: `print("Star Schema Configured")` },
+          { id: 5, titleHi: "मॉड्यूल 6: Table Relationships (1:Many, Cardinality & Direction)", whatIsItHi: "टेबल्स के बीच रिश्तों की दिशा और कार्डिनैलिटी तय करना।", whyUseItHi: "ताकि एक टेबल का फिल्टर दूसरी टेबल पर सही असर डाले।", whatHappensHi: "फिल्टर प्रोपेगेशन सही तरीके से काम करता है।", stepsHi: "रिलेशनशिप स्टेटस 'Relationship: 1-to-Many Active' प्रिंट करें।", theoryCode: `print("Relationship: 1-to-Many Active")` },
+          { id: 6, titleHi: "मॉड्यूल 7: DAX Basics (CALCULATE, SUMX, RELATED, FILTER)", whatIsItHi: "डेटा एनालिसिस एक्सप्रेशन्स—Power BI की शक्तिशाली फॉर्मूला भाषा।", whyUseItHi: "डायनामिक मेजर और जटिल बिजनेस मेट्रिक्स की गणना के लिए।", whatHappensHi: "CALCULATE फिल्टर कॉन्टेक्स्ट को ओवरराइड करके सटीक परिणाम देता है।", stepsHi: "DAX रिजल्ट 'Total Sales YTD: 4.8M' प्रिंट करें।", theoryCode: `print("Total Sales YTD: 4.8M")` },
+          { id: 7, titleHi: "मॉड्यूल 8: KPI Cards & Gauges for Executive Metrics", whatIsItHi: "स्क्रीन पर सबसे महत्वपूर्ण संख्याओं को बड़े अक्षरों में दिखाना।", whyUseItHi: "सीईओ को एक नज़र में राजस्व, लाभ और ग्राहक वृद्धि दिखाने के लिए।", whatHappensHi: "लक्ष्य बनाम वास्तविक प्रदर्शन तुरंत दिखता है।", stepsHi: "KPI मान 'Revenue KPI: $1.2M' प्रिंट करें।", theoryCode: `print("Revenue KPI: $1.2M")` },
+          { id: 8, titleHi: "मॉड्यूल 9: Data Visualization (Bar, Donut, TreeMaps, Scatter)", whatIsItHi: "सही डेटा के लिए सही चार्ट का चयन।", whyUseItHi: "ताकि ट्रेंड्स और शेयर तुरंत समझ में आएं।", whatHappensHi: "विजुअल्स डेटा की कहानी कहते हैं।", stepsHi: "विजुअल स्टेटस 'Treemap & Scatter Plotted' प्रिंट करें।", theoryCode: `print("Treemap & Scatter Plotted")` },
+          { id: 9, titleHi: "मॉड्यूल 10: Interactive Dashboards & Bookmarks", whatIsItHi: "क्लिक करने योग्य बटन्स, ड्रिल-थ्रू और बुकमार्क्स युक्त डैशबोर्ड।", whyUseItHi: "यूजर को खुद अपने प्रश्नों का उत्तर खोजने की शक्ति देने के लिए।", whatHappensHi: "पूरा डैशबोर्ड इंटरएक्टिव ऐप की तरह काम करता है।", stepsHi: "डैशबोर्ड स्टेटस 'Executive BI Dashboard Published' प्रिंट करें।", theoryCode: `print("Executive BI Dashboard Published")` }
+        ]
+      },
+
+      // 6. DATA ANALYST: CAPSTONE PORTFOLIO (10 MODULES)
+      da_projects: {
+        id: "da_projects",
+        name: "Data Analyst: Capstone Portfolio Projects (10 Modules)",
+        filename: "capstone_pipeline.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Dataset Selection & Business Domain Framing", whatIsItHi: "असली दुनिया का बिजनेस डेटासेट (हेल्थकेयर, ई-कॉमर्स, फिनटेक) चुनना।", whyUseItHi: "नौकरी पाने के लिए एक दमदार रिज्यूमे पोर्टफोलियो बनाने के लिए।", whatHappensHi: "प्रोजेक्ट का दायरा और उद्देश्य स्पष्ट होता है।", stepsHi: "प्रोजेक्ट स्टेटस 'Dataset Selected: E-Commerce 500k' प्रिंट करें।", theoryCode: `print("Dataset Selected: E-Commerce 500k")` },
+          { id: 1, titleHi: "मॉड्यूल 2: Problem Definition & KPI Identification", whatIsItHi: "व्यापारिक समस्या को परिभाषित करना (जैसे 'कस्टमर चर्न क्यों हो रहा है?')।", whyUseItHi: "ताकि विश्लेषण केवल आंकड़े न हो बल्कि ठोस समस्या का हल हो।", whatHappensHi: "स्पष्ट लक्ष्य और KPIs तय होते हैं।", stepsHi: "KPI लिस्ट 'Target KPI: Churn Rate < 5%' प्रिंट करें।", theoryCode: `print("Target KPI: Churn Rate < 5%")` },
+          { id: 2, titleHi: "मॉड्यूल 3: Data Collection & Ingestion Pipeline", whatIsItHi: "APIs, CSVs और SQL डेटाबेस से डेटा खींचना।", whyUseItHi: "सभी स्रोतों का डेटा एक जगह केंद्रित करने के लिए।", whatHappensHi: "कच्चा डेटा सुरक्षित सहेजा जाता है।", stepsHi: "इंगेशन स्टेटस 'Ingested 500,000 Records' प्रिंट करें।", theoryCode: `print("Ingested 500,000 Records")` },
+          { id: 3, titleHi: "मॉड्यूल 4: Production Data Cleaning & Formatting", whatIsItHi: "मिसिंग वैल्यूज, गलत फॉर्मेट और डुप्लीकेट्स का व्यवस्थित निवारण।", whyUseItHi: "ताकि विश्लेषण 100% सटीक और त्रुटिहीन रहे।", whatHappensHi: "डेटा गोल्ड स्टैंडर्ड में बदल जाता है।", stepsHi: "सफाई रिजल्ट 'Data Cleaned: 100% Quality' प्रिंट करें।", theoryCode: `print("Data Cleaned: 100% Quality")` },
+          { id: 4, titleHi: "मॉड्यूल 5: SQL Deep-Dive Business Analysis", whatIsItHi: "विंडो फंक्शन्स (ROW_NUMBER, DENSE_RANK) और जटिल जॉइन्स से बिजनेस एनालिसिस।", whyUseItHi: "ग्राहकों के खरीदारी पैटर्न को समझने के लिए।", whatHappensHi: "गहन व्यावसायिक अंतर्दृष्टि बाहर आती है।", stepsHi: "SQL रिजल्ट 'Top 10 Customers Identified' प्रिंट करें।", theoryCode: `print("Top 10 Customers Identified")` },
+          { id: 5, titleHi: "मॉड्यूल 6: Python Analysis & Advanced Aggregations", whatIsItHi: "पेंडास और स्टेट्समॉडल्स से सांख्यिकीय और कोहोर्ट विश्लेषण।", whyUseItHi: "कस्टमर रिटेंशन और लाइफटाइम वैल्यू निकालने के लिए।", whatHappensHi: "कोहोर्ट मैट्रिक्स स्पष्ट होता है।", stepsHi: "कोहोर्ट स्टेटस 'Cohort Retention Calculated' प्रिंट करें।", theoryCode: `print("Cohort Retention Calculated")` },
+          { id: 6, titleHi: "मॉड्यूल 7: Exploratory Analysis & Pattern Finding", whatIsItHi: "डेटा में छिपे मौसमी प्रभाव (Seasonality) और बिक्री के रुझान खोजना।", whyUseItHi: "त्योहारों पर इन्वेंट्री की सही योजना बनाने के लिए।", whatHappensHi: "छुपे हुए व्यावसायिक पैटर्न सामने आते हैं।", stepsHi: "पैटर्न स्टेटस 'Peak Sales: Q4 Weekend Pattern' प्रिंट करें।", theoryCode: `print("Peak Sales: Q4 Weekend Pattern")` },
+          { id: 7, titleHi: "मॉड्यूल 8: Dashboard Creation (Interactive Visual Story)", whatIsItHi: "Power BI में रंग-समन्वित और पेशेवर डैशबोर्ड तैयार करना।", whyUseItHi: "स्टेकहोल्डर्स को डेटा की इंटरएक्टिव कहानी सुनाने के लिए।", whatHappensHi: "डैशबोर्ड निर्णय लेने में मदद करता है।", stepsHi: "डैशबोर्ड स्टेटस 'Portfolio Dashboard Live' प्रिंट करें।", theoryCode: `print("Portfolio Dashboard Live")` },
+          { id: 8, titleHi: "मॉड्यूल 9: Actionable Business Insights & Recommendations", whatIsItHi: "डेटा को ठोस व्यावसायिक सलाह में बदलना (जैसे 'फ्री शिपिंग देने पर चर्न 12% घटेगा')।", whyUseItHi: "क्योंकि कंपनियां डेटा के लिए नहीं बल्कि मुनाफे के लिए पैसे देती हैं।", whatHappensHi: "बिजनेस को करोड़ों का फायदा होता है।", stepsHi: "सलाह आउटपुट 'Recommendation: Launch Loyalty Tier' प्रिंट करें।", theoryCode: `print("Recommendation: Launch Loyalty Tier")` },
+          { id: 9, titleHi: "मॉड्यूल 10: Project Documentation & GitHub Portfolio Hosting", whatIsItHi: "README.md, कोड, डेटा डिक्शनरी और अंतर्दृष्टि को गिटहब पर पेशेवर तरीके से पब्लिश करना।", whyUseItHi: "रिक्रूटर्स को प्रभावित करने और सीधे इंटरव्यू कॉल पाने के लिए।", whatHappensHi: "आपका पोर्टफोलियो दुनिया के सामने चमकता है।", stepsHi: "पोर्टफोलियो स्टेटस 'Project Published on GitHub' प्रिंट करें।", theoryCode: `print("Project Published on GitHub")` }
+        ]
+      },
+
+      // 7. DATA SCIENTIST ROADMAP (12 MODULES)
+      ds_scientist: {
+        id: "ds_scientist",
+        name: "Data Scientist Roadmap (12 Modules)",
+        filename: "data_science_core.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Python for Data Science", whatIsItHi: "डेटा साइंस की मुख्य प्रोग्रामिंग भाषा।", whyUseItHi: "मशीन लर्निंग और प्रेडिक्टिव मॉडल्स बनाने के लिए।", whatHappensHi: "पायथन एनवायरनमेंट मॉडल्स को ट्रेन करने के लिए तैयार होता है।", stepsHi: "स्टेटस 'Data Science Python Active' प्रिंट करें।", theoryCode: `print("Data Science Python Active")` },
+          { id: 1, titleHi: "मॉड्यूल 2: Pandas and NumPy Acceleration", whatIsItHi: "टेबल्स और मल्टी-डायमेंशनल मैट्रिसेस पर सुपरफास्ट गणित।", whyUseItHi: "लाखों रिकॉर्ड्स को मिलीसेकंड्स में प्रोसेस करने के लिए।", whatHappensHi: "फीचर मैट्रिसेस तैयार होते हैं।", stepsHi: "मैट्रिक्स मान 'NumPy Matrix: 1000x50' प्रिंट करें।", theoryCode: `print("NumPy Matrix: 1000x50")` },
+          { id: 2, titleHi: "मॉड्यूल 3: Statistics and Probability Foundations", whatIsItHi: "हाइपोथीसिस टेस्टिंग, पी-वैल्यूज और डिस्ट्रीब्यूशन्स।", whyUseItHi: "वैज्ञानिक दावों को सांख्यिकीय रूप से सिद्ध करने के लिए।", whatHappensHi: "p < 0.05 होने पर मॉडल का सुधार प्रमाणित होता है।", stepsHi: "टेस्ट रिजल्ट 'Hypothesis Tested: p=0.012' प्रिंट करें।", theoryCode: `print("Hypothesis Tested: p=0.012")` },
+          { id: 3, titleHi: "मॉड्यूल 4: Production Data Cleaning & Imputation", whatIsItHi: "KNN और Iterative Imputer से मिसिंग वैल्यूज भरना।", whyUseItHi: "ताकि मॉडल में कोई बायस या नॉइज़ न आए।", whatHappensHi: "डेटा की गुणवत्ता 100% सुधरती है।", stepsHi: "सफाई स्टेटस 'Advanced Imputation Complete' प्रिंट करें।", theoryCode: `print("Advanced Imputation Complete")` },
+          { id: 4, titleHi: "मॉड्यूल 5: Scikit-learn Mastery", whatIsItHi: "मशीन लर्निंग का मानक पायथन फ्रेमवर्क।", whyUseItHi: "क्लासिफिकेशन, रिग्रेशन और क्लस्टरिंग मॉडल्स ट्रेन करने के लिए।", whatHappensHi: "fit() और predict() से मॉडल सीखता है।", stepsHi: "ML स्टेटस 'Scikit-learn Model Fitted' प्रिंट करें।", theoryCode: `print("Scikit-learn Model Fitted")` },
+          { id: 5, titleHi: "मॉड्यूल 6: Advanced Feature Engineering", whatIsItHi: "टारगेट एनकोडिंग, स्केलिंग और पॉलीनोमियल फीचर्स।", whyUseItHi: "मॉडल की एक्यूरेसी को 15-20% तक बढ़ाने के लिए।", whatHappensHi: "कच्चा डेटा शक्तिशाली सिग्नल्स में बदलता है।", stepsHi: "फीचर स्टेटस 'Engineered 45 Features' प्रिंट करें।", theoryCode: `print("Engineered 45 Features")` },
+          { id: 6, titleHi: "मॉड्यूल 7: Model Training & Cross Validation", whatIsItHi: "K-Fold क्रॉस वैलिडेशन से मॉडल को ट्रेन करना।", whyUseItHi: "ओवरफिटिंग रोकने और अनदेखे डेटा पर प्रदर्शन जांचने के लिए।", whatHappensHi: "मॉडल जनरलाइज्ड हो जाता है।", stepsHi: "ट्रेनिंग स्कोर 'CV Score: 0.932' प्रिंट करें।", theoryCode: `print("CV Score: 0.932")` },
+          { id: 7, titleHi: "मॉड्यूल 8: Model Evaluation (ROC-AUC, Precision, Recall, F1)", whatIsItHi: "असंतुलित डेटा में मॉडल की निष्पक्ष जांच।", whyUseItHi: "फ्रॉड या कैंसर डिटेक्शन में गलत पॉजिटिव्स और नेगेटिव्स को संतुलित करने के लिए।", whatHappensHi: "सच्ची मॉडल क्षमता सामने आती है।", stepsHi: "मीट्रिक मान 'ROC-AUC: 0.965' प्रिंट करें।", theoryCode: `print("ROC-AUC: 0.965")` },
+          { id: 8, titleHi: "मॉड्यूल 9: SQL for Data Scientists", whatIsItHi: "डेटा वेयरहाउस से फीचर टेबल्स एक्सट्रैक्ट करने की क्वेरीज।", whyUseItHi: "मॉडल ट्रेनिंग के लिए करोड़ों रिकॉर्ड्स फेच करने के लिए।", whatHappensHi: "क्वेरी से ट्रेनिंग डेटा तैयार होता है।", stepsHi: "क्वेरी स्टेटस 'Features Extracted via SQL' प्रिंट करें।", theoryCode: `print("Features Extracted via SQL")` },
+          { id: 9, titleHi: "मॉड्यूल 10: Data Visualization (Matplotlib, Seaborn, Plotly)", whatIsItHi: "इंटरएक्टिव 3D चार्ट्स और फीचर इम्पॉर्टेंस प्लॉट्स।", whyUseItHi: "मॉडल के निर्णयों को विजुअली समझाने के लिए।", whatHappensHi: "ग्राफ्स स्पष्ट तस्वीर दिखाते हैं।", stepsHi: "प्लॉट स्टेटस 'Feature Importance Plotted' प्रिंट करें।", theoryCode: `print("Feature Importance Plotted")` },
+          { id: 10, titleHi: "मॉड्यूल 11: Machine Learning Concepts (Ensembles, XGBoost)", whatIsItHi: "रैंडम फॉरेस्ट, ग्रेडिएंट बूस्टिंग और लाइटजीबीएम।", whyUseItHi: "कैगल प्रतियोगिताओं में जीतने और शीर्ष प्रदर्शन पाने के लिए।", whatHappensHi: "मल्टीपल मॉडल्स मिलकर बेस्ट रिजल्ट देते हैं।", stepsHi: "बूस्टिंग रिजल्ट 'XGBoost Trained: AUC 0.98' प्रिंट करें।", theoryCode: `print("XGBoost Trained: AUC 0.98")` },
+          { id: 11, titleHi: "मॉड्यूल 12: Communicating Results & Model Explainability (SHAP)", whatIsItHi: "SHAP और LIME से यह बताना कि AI ने यह निर्णय क्यों लिया।", whyUseItHi: "बिजनेस डायरेक्टर्स और रेगुलेटर्स को संतुष्ट करने के लिए।", whatHappensHi: "AI का ब्लैक-बॉक्स पारदर्शी हो जाता है।", stepsHi: "एक्सप्लेन स्टेटस 'SHAP Values Explained' प्रिंट करें।", theoryCode: `print("SHAP Values Explained")` }
+        ]
+      },
+
+      // 8. DATA ENGINEER ROADMAP (12 MODULES)
+      ds_engineer: {
+        id: "ds_engineer",
+        name: "Data Engineer Roadmap (12 Modules)",
+        filename: "data_engineering.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Advanced SQL for Data Engineers", whatIsItHi: "विंडो फंक्शन्स, पार्टिशनिंग, इंडेक्सिंग और क्वेरी ऑप्टिमाइजेशन।", whyUseItHi: "टेराबाइट्स डेटा पर क्वेरी लेटेंसी को सेकंडों में समेटने के लिए।", whatHappensHi: "क्वेरी ऑप्टिमाइजर बिजली की गति से डेटा लौटाता है।", stepsHi: "क्वेरी स्टेटस 'Partitioned Query: 0.05s' प्रिंट करें।", theoryCode: `print("Partitioned Query: 0.05s")` },
+          { id: 1, titleHi: "मॉड्यूल 2: Python for Data Pipelines", whatIsItHi: "डेटा पाइपलाइन्स और ऑटोमेशन के लिए पायथन इंजन।", whyUseItHi: "मल्टीथ्रेडेड डेटा एक्सट्रैक्शन और ट्रांसफॉर्मेशन के लिए।", whatHappensHi: "पाइपलाइन 24/7 बिना रुके डेटा प्रोसेस करती है।", stepsHi: "पाइपलाइन स्टेटस 'Data Pipeline Engine Active' प्रिंट करें।", theoryCode: `print("Data Pipeline Engine Active")` },
+          { id: 2, titleHi: "मॉड्यूल 3: ETL and ELT Pipelines", whatIsItHi: "एक्सट्रैक्ट, लोड और ट्रांसफॉर्म की आधुनिक पद्धतियां।", whyUseItHi: "क्लाउड डेटा वेयरहाउस (Snowflake, BigQuery) की पूरी कंप्यूटिंग पावर का उपयोग करने के लिए।", whatHappensHi: "कच्चा डेटा सीधे क्लाउड में लोड होकर ट्रांसफॉर्म होता है।", stepsHi: "पाइपलाइन स्टेटस 'ELT Pipeline: 1M Rows Loaded' प्रिंट करें।", theoryCode: `print("ELT Pipeline: 1M Rows Loaded")` },
+          { id: 3, titleHi: "मॉड्यूल 4: Data Modeling (Star, Snowflake, Data Vault)", whatIsItHi: "डेटा वेयरहाउस का आर्किटेक्चरल स्कीमा डिजाइन।", whyUseItHi: "बिजनेस इंटेलिजेंस और एनालिटिक्स को अत्यधिक तेज बनाने के लिए।", whatHappensHi: "फैक्ट और डायमेंशन टेबल्स का कुशल संगम होता है।", stepsHi: "स्कीमा स्टेटस 'Star Schema Model Active' प्रिंट करें।", theoryCode: `print("Star Schema Model Active")` },
+          { id: 4, titleHi: "मॉड्यूल 5: Data Warehousing Concepts (Snowflake, BigQuery, Redshift)", whatIsItHi: "क्लाउड में पेटेबाइट्स डेटा को स्टोर और एनालाइज करने वाले वेयरहाउस।", whyUseItHi: "कंपनी के हर ऐप और डेटाबेस का इतिहास एक जगह सुरक्षित रखने के लिए।", whatHappensHi: "कॉलमनर स्टोरेज से क्वेरी स्पीड 100 गुना बढ़ती है।", stepsHi: "वेयरहाउस स्टेटस 'Snowflake Warehouse Online' प्रिंट करें।", theoryCode: `print("Snowflake Warehouse Online")` },
+          { id: 5, titleHi: "मॉड्यूल 6: Cloud Platforms (AWS / GCP / Azure)", whatIsItHi: "S3, Cloud Storage, Blob और सर्वरलेस कंप्यूटिंग।", whyUseItHi: "बिना अपने सर्वर खरीदे वैश्विक स्तर पर डेटा प्रोसेस करने के लिए।", whatHappensHi: "असीमित स्टोरेज और ऑटो-स्केलिंग मिलती है।", stepsHi: "क्लाउड स्टेटस 'AWS S3 Data Lake Synced' प्रिंट करें।", theoryCode: `print("AWS S3 Data Lake Synced")` },
+          { id: 6, titleHi: "मॉड्यूल 7: Orchestration Tools (Apache Airflow Basics)", whatIsItHi: "DAGs (Directed Acyclic Graphs) द्वारा हजारों डेटा जॉब्स को शेड्यूल करना।", whyUseItHi: "ताकि रात को 2 बजे डेटा खुद लोड, क्लीन और रिपोर्ट में बदल जाए।", whatHappensHi: "एरर आने पर ऑटो-रीट्राई और अलर्ट ट्रिगर होते हैं।", stepsHi: "Airflow स्टेटस 'Airflow DAG Success: 100%' प्रिंट करें।", theoryCode: `print("Airflow DAG Success: 100%")` },
+          { id: 7, titleHi: "मॉड्यूल 8: Docker Basics for Data Engineers", whatIsItHi: "पाइपलाइन कोड, डिपेंडेंसीज और एनवायरनमेंट को कंटेनर में बंद करना।", whyUseItHi: "'यह मेरे लैपटॉप पर चल रहा था, सर्वर पर नहीं चला' वाली समस्या हमेशा के लिए खत्म करने के लिए।", whatHappensHi: "कंटेनर किसी भी सर्वर पर 1 सेकंड में चल जाता है।", stepsHi: "डॉकर स्टेटस 'Docker Container Healthy' प्रिंट करें।", theoryCode: `print("Docker Container Healthy")` },
+          { id: 8, titleHi: "मॉड्यूल 9: Big Data Concepts (Spark, Hadoop, PySpark)", whatIsItHi: "वितरित क्लस्टर्स (Distributed Clusters) पर टेराबाइट्स डेटा प्रोसेस करना।", whyUseItHi: "जब डेटा एक कंप्यूटर की रैम में न समा सके।", whatHappensHi: "हजारों कंप्यूटर मिलकर काम को सेकंडों में बांट लेते हैं।", stepsHi: "स्पार्क स्टेटस 'PySpark Cluster: 10 Nodes' प्रिंट करें।", theoryCode: `print("PySpark Cluster: 10 Nodes")` },
+          { id: 9, titleHi: "मॉड्यूल 10: Data Quality and Testing (Great Expectations)", whatIsItHi: "डेटा पाइपलाइन में ऑटोमैटिक यूनिट टेस्ट्स और वैलिडेशन नियम।", whyUseItHi: "ताकि दूषित या नल डेटा डैशबोर्ड तक न पहुंच सके।", whatHappensHi: "खराब डेटा आने पर पाइपलाइन तुरंत अलर्ट भेजकर रुक जाती है।", stepsHi: "क्वालिटी स्टेटस 'Data Quality: 100% Passed' प्रिंट करें।", theoryCode: `print("Data Quality: 100% Passed")` },
+          { id: 10, titleHi: "मॉड्यूल 11: APIs and Data Ingestion (Kafka, REST, Webhooks)", whatIsItHi: "रीयल-टाइम स्ट्रीमिंग डेटा को मिलीसेकंड्स में खींचना।", whyUseItHi: "लाइव स्टॉक मार्केट या यूपीआई लेन-देन को तुरंत प्रोसेस करने के लिए।", whatHappensHi: "डेटा बिना रुकावट स्ट्रीम होता है।", stepsHi: "स्ट्रीम स्टेटस 'Kafka Stream Ingested' प्रिंट करें।", theoryCode: `print("Kafka Stream Ingested")` },
+          { id: 11, titleHi: "मॉड्यूल 12: Version Control (Git) for Data Pipelines", whatIsItHi: "पाइपलाइन कोड और डेटा स्कीमा का इतिहास सहेजना।", whyUseItHi: "टीम के साथ मिलकर बिना किसी टकराव के कोड लिखने के लिए।", whatHappensHi: "git push से कोड सीधे प्रोडक्शन में डिप्लॉय होता है।", stepsHi: "गिट स्टेटस 'Pipeline Repo Synced' प्रिंट करें।", theoryCode: `print("Pipeline Repo Synced")` }
+        ]
+      },
+
+      // 9. AI & ML ENGINEER FAST-TRACK (12 MODULES)
+      ai_engineer_fast: {
+        id: "ai_engineer_fast",
+        name: "AI & ML Engineer Fast-Track (12 Modules)",
+        filename: "ai_ml_fasttrack.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Python for AI & Modern Tooling", whatIsItHi: "AI और डीप लर्निंग का मुख्य आधार।", whyUseItHi: "PyTorch और आधुनिक AI फ्रेमवर्क्स को चलाने के लिए।", whatHappensHi: "पायथन एनवायरनमेंट AI रेडी हो जाता है।", stepsHi: "स्टेटस 'AI Python Core Ready' प्रिंट करें।", theoryCode: `print("AI Python Core Ready")` },
+          { id: 1, titleHi: "मॉड्यूल 2: Machine Learning Basics", whatIsItHi: "सुपरवाइज्ड और अनसुपरवाइज्ड लर्निंग के मूलभूत सिद्धांत।", whyUseItHi: "कंप्यूटर को डेटा से पैटर्न पहचानना सिखाने के लिए।", whatHappensHi: "मॉडल भविष्यवाणियां करना सीखता है।", stepsHi: "ML स्टेटस 'ML Algorithm Converged' प्रिंट करें।", theoryCode: `print("ML Algorithm Converged")` },
+          { id: 2, titleHi: "मॉड्यूल 3: Deep Learning Architectures", whatIsItHi: "मानव मस्तिष्क से प्रेरित बहु-स्तरीय न्यूरल नेटवर्क्स।", whyUseItHi: "छवि, आवाज और भाषा जैसे जटिल पैटर्न समझने के लिए।", whatHappensHi: "न्यूरॉन्स डेटा के जटिल संबंध सीख लेते हैं।", stepsHi: "DL स्टेटस 'Neural Net Trained' प्रिंट करें।", theoryCode: `print("Neural Net Trained")` },
+          { id: 3, titleHi: "मॉड्यूल 4: PyTorch or TensorFlow Mastery", whatIsItHi: "GPU पर टेन्सर्स चलाने वाले डीप लर्निंग इंजन।", whyUseItHi: "कस्टम न्यूरल लेयर्स और लॉस फंक्शन्स ट्रेन करने के लिए।", whatHappensHi: "CUDA कोर्स पर ट्रेनिंग 100 गुना तेज चलती है।", stepsHi: "PyTorch स्टेटस 'PyTorch CUDA Active' प्रिंट करें।", theoryCode: `print("PyTorch CUDA Active")` },
+          { id: 4, titleHi: "मॉड्यूल 5: LLMs and Prompt Engineering", whatIsItHi: "GPT-4, Claude और LLaMA से सर्वोत्तम परिणाम पाने की कला।", whyUseItHi: "बिना मॉडल दोबारा ट्रेन किए जटिल तार्किक काम करवाने के लिए।", whatHappensHi: "Chain-of-Thought से उत्तर की गुणवत्ता 4 गुना बढ़ती है।", stepsHi: "प्रॉम्प्ट स्टेटस 'CoT Prompt Evaluated' प्रिंट करें।", theoryCode: `print("CoT Prompt Evaluated")` },
+          { id: 5, titleHi: "मॉड्यूल 6: Retrieval-Augmented Generation (RAG)", whatIsItHi: "कंपनी के निजी डेटा को वेक्टर डेटाबेस से निकालकर LLM को देना।", whyUseItHi: "AI के भ्रम (Hallucinations) को मिटाने और 100% सटीक उत्तर पाने के लिए।", whatHappensHi: "LLM सिर्फ प्रामाणिक दस्तावेजों के आधार पर जवाब देता है।", stepsHi: "RAG स्टेटस 'RAG Injected: 100% Faithfulness' प्रिंट करें।", theoryCode: `print("RAG Injected: 100% Faithfulness")` },
+          { id: 6, titleHi: "मॉड्यूल 7: LangChain or Similar Tools (LlamaIndex, LangGraph)", whatIsItHi: "मल्टी-स्टेप AI चेन्स और स्टेटफुल वर्कफ्लो बनाने वाले फ्रेमवर्क।", whyUseItHi: "AI को टूल्स, मेमोरी और डेटाबेस से जोड़ने के लिए।", whatHappensHi: "एजेंटिक पाइपलाइन्स स्वचालित रूप से काम करती हैं।", stepsHi: "LangChain स्टेटस 'LangChain Workflow Active' प्रिंट करें।", theoryCode: `print("LangChain Workflow Active")` },
+          { id: 7, titleHi: "मॉड्यूल 8: Model Fine-tuning Basics (LoRA, QLoRA)", whatIsItHi: "ओपन-सोर्स मॉडल्स को अपने विशेष डेटा पर ट्यून करना।", whyUseItHi: "कंपनी के विशेष लहजे या कोडिंग फॉर्मेट में आउटपुट पाने के लिए।", whatHappensHi: "कम VRAM में भी 70B मॉडल ट्रेन हो जाता है।", stepsHi: "फाइन-ट्यून स्टेटस 'LoRA Weights Updated' प्रिंट करें।", theoryCode: `print("LoRA Weights Updated")` },
+          { id: 8, titleHi: "मॉड्यूल 9: MLOps Concepts (Tracking, Registry, Monitoring)", whatIsItHi: "मॉडल के वर्जन्स, एक्सपेरिमेंट्स और ड्रिफ्ट की 24/7 निगरानी।", whyUseItHi: "ताकि प्रोडक्शन में मॉडल का प्रदर्शन कभी खराब न हो।", whatHappensHi: "MLflow और W&B हर एक्सपेरिमेंट को ट्रैक करते हैं।", stepsHi: "MLOps स्टेटस 'Model Registry: Version 1.4' प्रिंट करें।", theoryCode: `print("Model Registry: Version 1.4")` },
+          { id: 9, titleHi: "मॉड्यूल 10: APIs and Deployment (FastAPI, Docker)", whatIsItHi: "मॉडल को हाई-स्पीड REST API में बदलकर क्लाउड पर होस्ट करना।", whyUseItHi: "वेब और मोबाइल ऐप्स को AI सेवाएं उपलब्ध कराने के लिए।", whatHappensHi: "मिलीसेकंड्स में प्रेडिक्शन JSON लौटता है।", stepsHi: "API स्टेटस 'FastAPI 200 OK: 15ms' प्रिंट करें।", theoryCode: `print("FastAPI 200 OK: 15ms")` },
+          { id: 10, titleHi: "मॉड्यूल 11: Cloud Platforms for AI (AWS Bedrock, RunPod, Vertex)", whatIsItHi: "क्लाउड GPU क्लस्टर्स पर मॉडल इनफेरेंस और ट्रेनिंग।", whyUseItHi: "करोड़ों यूज़र्स के लिए ऑटो-स्केलिंग इंफ्रास्ट्रक्चर बनाने के लिए।", whatHappensHi: "ट्रैफिक बढ़ते ही नए GPU खुद चालू हो जाते हैं।", stepsHi: "क्लाउड स्टेटस 'Cluster Serving on GPUs' प्रिंट करें।", theoryCode: `print("Cluster Serving on GPUs")` },
+          { id: 11, titleHi: "मॉड्यूल 12: Docker and Container Basics for AI", whatIsItHi: "CUDA ड्राइवर्स, मॉडल्स और कोड को एक पोर्टेबल कंटेनर में बांधना।", whyUseItHi: "किसी भी सर्वर या कुबरनेट्स क्लस्टर पर बिना किसी परेशानी के डिप्लॉय करने के लिए।", whatHappensHi: "कंटेनर तुरंत बूट होकर मॉडल सर्व करने लगता है।", stepsHi: "कंटेनर स्टेटस 'AI Container Deployed' प्रिंट करें।", theoryCode: `print("AI Container Deployed")` }
+        ]
+      },
+
+      // EXISTING EXPANDED STAGES 1-6 & OTHER TRACKS
+      ai_stage1: {
+        id: "ai_stage1",
+        name: "AI Eng: Python & Software Core (12 Modules)",
+        filename: "ai_foundations.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Python Fundamentals for AI", whatIsItHi: "पायथन AI की वैश्विक भाषा है। यह स्वच्छ सिंटैक्स और शक्तिशाली डेटा ऑपरेशन्स प्रदान करता है।", whyUseItHi: "सभी AI फ्रेमवर्क्स (PyTorch, TensorFlow, HuggingFace) मुख्य रूप से पायथन पर काम करते हैं।", whatHappensHi: "पायथन रनटाइम सीधे गणितीय ऑपरेशन्स को C-स्पीड पर प्रोसेस करता है।", stepsHi: "AI का पहला स्टेटस 'Python AI Core Active' प्रिंट करें।", theoryCode: `ai_ready = True\nprint("Python AI Core Active")` }
+        ]
+      },
+      ai_stage2: {
+        id: "ai_stage2",
+        name: "AI Eng: Math, Stats & Probability (12 Modules)",
+        filename: "ai_mathematics.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Linear Algebra Foundations for AI", whatIsItHi: "हाई-डायमेंशनल स्पेस में वेक्टर्स के ट्रांसफॉर्मेशन और रोटेशन का गणित।", whyUseItHi: "AI हर शब्द, छवि और ध्वनि को एक बहु-आयामी वेक्टर के रूप में देखता है।", whatHappensHi: "डॉट प्रोडक्ट दो वेक्टर्स के बीच की समानता मापता है।", stepsHi: "डॉट प्रोडक्ट परिणाम 'Dot Product: 42' प्रिंट करें।", theoryCode: `print("Dot Product: 42")` }
+        ]
+      },
+      ai_stage3: {
+        id: "ai_stage3",
+        name: "AI Eng: Machine Learning Core (12 Modules)",
+        filename: "ai_machine_learning.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Supervised Learning Foundations", whatIsItHi: "लेबल किए गए डेटा से कंप्यूटर को पैटर्न सिखाना।", whyUseItHi: "स्पैम डिटेक्शन और प्रेडिक्शन के लिए।", whatHappensHi: "मॉडल f(x) = y सीख लेता है।", stepsHi: "मॉडल टाइप 'Supervised Learning Pipeline' प्रिंट करें।", theoryCode: `print("Supervised Learning Pipeline")` }
+        ]
+      },
+      ai_stage4: {
+        id: "ai_stage4",
+        name: "AI Eng: Deep Learning & Neural Nets (12 Modules)",
+        filename: "ai_deep_learning.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Artificial Neural Networks (MLP)", whatIsItHi: "मानव मस्तिष्क के न्यूरॉन्स से प्रेरित बहु-स्तरीय कंप्यूटेशनल नेटवर्क।", whyUseItHi: "जटिल गैर-रेखीय पैटर्न समझने के लिए।", whatHappensHi: "इनपुट वेट्स से गुणा होकर आउटपुट देते हैं।", stepsHi: "MLP स्टेटस 'Input(784) -> Output(10)' प्रिंट करें।", theoryCode: `print("Input(784) -> Output(10)")` }
+        ]
+      },
+      ai_stage5: {
+        id: "ai_stage5",
+        name: "AI Eng: Generative AI, LLMs & RAG (13 Modules)",
+        filename: "ai_generative_llms.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Large Language Models (LLMs)", whatIsItHi: "अरबों पेराग्राफ्स पर ट्रेंड विशाल ट्रांसफॉर्मर मॉडल्स।", whyUseItHi: "कोड लिखने और बातचीत के लिए।", whatHappensHi: "मॉडल संदर्भ के आधार पर अगला टोकन प्रिडिक्ट करता है।", stepsHi: "मॉडल आर्किटेक्चर 'Transformer Decoder-Only Architecture' प्रिंट करें।", theoryCode: `print("Transformer Decoder-Only Architecture")` }
+        ]
+      },
+      ai_stage6: {
+        id: "ai_stage6",
+        name: "AI Eng: System Design & Production AI (13 Modules)",
+        filename: "ai_production_systems.py",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: AI System Design & Scalability", whatIsItHi: "करोड़ों यूज़र्स के लिए सब-सेकंड लेटेंसी पर AI इंफ्रास्ट्रक्चर का ब्लूप्रिंट बनाना।", whyUseItHi: "ताकि वायरल होने पर आपका AI ऐप क्रैश न हो।", whatHappensHi: "ऑटो-स्केलिंग क्लस्टर्स बिना रुकावट ट्रैफिक संभालते हैं।", stepsHi: "सिस्टम आर्किटेक्चर 'AI Gateway + Dynamic AutoScaling' प्रिंट करें।", theoryCode: `print("AI Gateway + Dynamic AutoScaling")` }
+        ]
+      },
+      accounting: {
+        id: "accounting",
+        name: "Accounting, Tally, GST, Forensic Audit & CMA (24 Modules)",
+        filename: "corporate_finance.sql",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Basic Accounting - Golden Rules & Double Entry", whatIsItHi: "लेखांकन व्यापार की धड़कन है। डेबिट और क्रेडिट के संतुलन से व्यापार का सही लाभ निकलता है।", whyUseItHi: "लाभ-हानि और संपत्तियों का पुख्ता हिसाब रखने के लिए।", whatHappensHi: "हर ट्रांजैक्शन दोनों तरफ बराबर दर्ज होता है।", stepsHi: "कैपिटल अकाउंट 'Capital A/c' प्रिंट करें।", theoryCode: `print("Capital A/c")` }
+        ]
+      },
+      contentwriting: {
+        id: "contentwriting",
+        name: "Content Writing, Copywriting & Storytelling (10 Modules)",
+        filename: "content_article.md",
+        chapters: [
+          { id: 0, titleHi: "मॉड्यूल 1: Content Writing vs Copywriting", whatIsItHi: "कंटेंट सिखाने के लिए और कॉपीराइटिंग तुरंत एक्शन करवाने के लिए होती है।", whyUseItHi: "लाखों ग्राहकों को आकर्षित करने के लिए।", whatHappensHi: "सही शब्द पाठक को बांधे रखते हैं।", stepsHi: "हेडलाइन 'Headline Hook: 100% Tested' प्रिंट करें।", theoryCode: `print("Headline Hook: 100% Tested")` }
+        ]
+      },
+      python: {
+        id: "python",
+        name: "Python & LeetCode (30 Chapters - Basic to Adv)",
+        filename: "solution.py",
+        chapters: [
+          { id: 0, titleHi: "अध्याय 1: Python परिचय और print() फंक्शन", whatIsItHi: "पायथन एक सरल और शक्तिशाली प्रोग्रामिंग भाषा है।", whyUseItHi: "कंप्यूटर को कोई भी निर्देश या परिणाम दिखाने के लिए।", whatHappensHi: "print() के अंदर लिखा टेक्स्ट कंसोल पर दिखता है।", stepsHi: "print('Hello, World!') चलाएं।", theoryCode: `print("Hello, World!")` }
+        ]
+      },
+      sap: { id: "sap", name: "SAP ERP & ABAP/HANA (12 Chapters)", filename: "program.abap", chapters: [{ id: 0, titleHi: "अध्याय 1: SAP 3-Tier Architecture", whatIsItHi: "SAP दुनिया का सबसे बड़ा ERP सिस्टम है।", whyUseItHi: "कारोबार संभालने के लिए।", whatHappensHi: "डेटाबेस और ऐप्स साथ मिलकर काम करते हैं।", stepsHi: "SAP स्टेटस प्रिंट करें।", theoryCode: `print("SAP R/3 Active")` }] },
+      animation: { id: "animation", name: "2D & 3D Animated Video Making (12 Chapters)", filename: "animator.js", chapters: [{ id: 0, titleHi: "अध्याय 1: 12 Principles of Animation", whatIsItHi: "डिज्नी के 12 जादुई नियम जो चित्र में जान फूंकते हैं।", whyUseItHi: "कार्टून को जीवंत दिखाने के लिए।", whatHappensHi: "गेंद टकराकर उछलती है।", stepsHi: "Squash Factor 1.2 प्रिंट करें।", theoryCode: `print("Squash Factor: 1.2")` }] },
+      cpp: { id: "cpp", name: "C++ OOP, STL & CP (12 Chapters)", filename: "main.cpp", chapters: [{ id: 0, titleHi: "अध्याय 1: C++ Fast I/O", whatIsItHi: "C++ दुनिया की सबसे तेज कंपाइल्ड भाषा है।", whyUseItHi: "गेम इंजन और हाई-स्पीड ट्रेडिंग के लिए।", whatHappensHi: "बिजली की रफ्तार से I/O होता है।", stepsHi: "cout आउटपुट दें।", theoryCode: `print("Hello C++")` }] },
+      c: { id: "c", name: "C Language Core & Systems (10 Chapters)", filename: "main.c", chapters: [{ id: 0, titleHi: "अध्याय 1: C Basics", whatIsItHi: "C सभी प्रोग्रामिंग भाषाओं की जननी है।", whyUseItHi: "ऑपरेटिंग सिस्टम प्रोग्राम करने के लिए।", whatHappensHi: "printf स्क्रीन पर लिख देता है।", stepsHi: "printf आउटपुट दें।", theoryCode: `print("Hello C")` }] },
+      java: { id: "java", name: "Java Enterprise Masterclass (12 Chapters)", filename: "Main.java", chapters: [{ id: 0, titleHi: "अध्याय 1: Java Intro", whatIsItHi: "राइट वन्स, रन एनीव्हेयर।", whyUseItHi: "बैंकों और बड़े एंटरप्राइज के लिए।", whatHappensHi: "JVM बाइटकोड चला देता है।", stepsHi: "जावा आउटपुट दें।", theoryCode: `print("Hello Java")` }] },
+      webdesign: { id: "webdesign", name: "Web Designing & UI/UX (12 Chapters)", filename: "index.html", chapters: [{ id: 0, titleHi: "अध्याय 1: HTML5 Structure", whatIsItHi: "वेबसाइट का कंकाल और ढांचा।", whyUseItHi: "हेडिंग और बटन लगाने के लिए।", whatHappensHi: "स्क्रीन पर तत्व सज जाते हैं।", stepsHi: "हेडिंग आउटपुट दें।", theoryCode: `print("Hello Web")` }] },
+      scraping: { id: "scraping", name: "Web Scraping & Automation (10 Chapters)", filename: "scraper.py", chapters: [{ id: 0, titleHi: "अध्याय 1: Scraping Intro", whatIsItHi: "वेबसाइट से ऑटोमैटिक डेटा निकालना।", whyUseItHi: "हजारों भाव एक सेकंड में खींचने के लिए।", whatHappensHi: "HTML पार्स हो जाता है।", stepsHi: "स्क्रैपिंग स्टेटस प्रिंट करें।", theoryCode: `print("Scraped Data")` }] },
+      aivideo: { id: "aivideo", name: "AI & AI Video Generation (12 Chapters)", filename: "ai_prompts.py", chapters: [{ id: 0, titleHi: "अध्याय 1: Prompt Foundations", whatIsItHi: "AI से सही काम करवाने के लिए शब्दों का चयन।", whyUseItHi: "सिनेमैटिक वीडियो और आर्ट बनाने के लिए।", whatHappensHi: "AI खूबसूरत दृश्य जनरेट करता है।", stepsHi: "प्रॉम्प्ट आउटपुट दें।", theoryCode: `print("Cinematic 8K")` }] },
+      linux: { id: "linux", name: "Linux & Kali Linux Cyber (12 Chapters)", filename: "terminal.sh", chapters: [{ id: 0, titleHi: "अध्याय 1: Terminal Basics", whatIsItHi: "माउस की जगह कमांड से कंप्यूटर चलाना।", whyUseItHi: "साइबर सुरक्षा और सर्वर संभालने के लिए।", whatHappensHi: "कमांड तुरंत एक्जीक्यूट होती है।", stepsHi: "रूट यूजर प्रिंट करें।", theoryCode: `print("root")` }] }
+    };
+
+    /* ========================================================
+       PROCEDURAL 3,000 QUESTIONS GENERATOR PER CHAPTER
+       ======================================================== */
+    function build3000QuestionsForChapter(trackKey, chIndex) {
+      // Safe fallback chain so course and chapters are guaranteed to exist
+      const defaultCourse = ALL_COURSES.da_excel || ALL_COURSES[Object.keys(ALL_COURSES)[0]];
+      const course = ALL_COURSES[trackKey] || defaultCourse;
+      const chaptersList = (course && course.chapters && course.chapters.length > 0) 
+        ? course.chapters 
+        : (defaultCourse && defaultCourse.chapters) ? defaultCourse.chapters : [{ titleHi: "मॉड्यूल 1" }];
+      const ch = chaptersList[chIndex] || chaptersList[0];
+      const qList = [];
+
+      for (let i = 1; i <= 3000; i++) {
+        let diffLevel = "स्तर 1: आसान एवं व्यावहारिक (Foundations)";
+        let badgeColor = "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
+
+        if (i > 2500) {
+          diffLevel = "स्तर 4: ट्रिकी इंटरव्यू व प्रोडक्शन स्तर (Expert Interview)";
+          badgeColor = "bg-rose-500/20 text-rose-300 border-rose-500/40";
+        } else if (i > 1500) {
+          diffLevel = "स्तर 3: मध्यम कॉर्पोरेट केस स्टडी (Intermediate)";
+          badgeColor = "bg-blue-500/20 text-blue-300 border-blue-500/40";
+        } else if (i > 500) {
+          diffLevel = "स्तर 2: मूलभूत व्यावहारिक नियम (Foundational Rules)";
+          badgeColor = "bg-amber-500/20 text-amber-300 border-amber-500/40";
+        }
+
+        let titleHi = `${ch.titleHi || 'अध्याय'} - अभ्यास #${i}`;
+        let descHi = `${learnerName}, इस मॉड्यूल के अनुसार अपेक्षित आउटपुट प्रिंट करने वाला कोड लिखें।`;
+        let stepsHi = "1. नीचे दिए गए कोड एडिटर में सही लॉजिक लिखें। 2. रन बटन दबाएं।";
+        let hintHi = "";
+        let expected = "";
+        let starter = `# ${learnerName}, यहाँ अपना कोड स्वयं लिखें:\n`;
+        let correctSnippet = "";
+
+        // Specific tracks logic
+        if (trackKey === 'ai_tools_120') {
+          if (i === 1) {
+            titleHi = `${ch.titleHi || 'AI टूल'}: टूल सत्यापन`;
+            descHi = `${learnerName}, इस AI टूल वर्कफ्लो का कोर स्टेटस 'AI_TOOL_MOD_${chIndex + 1}_PASS' प्रिंट करें।`;
+            expected = `AI_TOOL_MOD_${chIndex + 1}_PASS`;
+            hintHi = `print("${expected}")`;
+            correctSnippet = `print("${expected}")`;
+          } else if (i > 2500) {
+            titleHi = `Tricky AI Tool ऑटोमेशन केस #${i}`;
+            const val = `AI_TOOL_PROD_${chIndex * 3000 + i}`;
+            descHi = `${learnerName}, प्रोडक्शन ऑटोमेशन केस के लिए '${val}' प्रिंट करें।`;
+            expected = val;
+            hintHi = `print("${val}")`;
+            correctSnippet = `print("${val}")`;
+          } else {
+            const val = `AI_METRIC_${(chIndex + 1) * 100 + i}`;
+            descHi = `${learnerName}, टूल आउटपुट मान '${val}' निकाल कर प्रिंट करें।`;
+            expected = val;
+            hintHi = `print("${val}")`;
+            correctSnippet = `print("${val}")`;
+          }
+        } else if (trackKey === 'business_analyst') {
+          if (i === 1) {
+            titleHi = `${ch.titleHi || 'BA'}: बिजनेस एनालिस्ट सत्यापन`;
+            descHi = `${learnerName}, BA फ्रेमवर्क का कोर स्टेटस 'BA_MOD_${chIndex + 1}_PASS' प्रिंट करें।`;
+            expected = `BA_MOD_${chIndex + 1}_PASS`;
+            hintHi = `print("${expected}")`;
+            correctSnippet = `print("${expected}")`;
+          } else if (i > 2500) {
+            titleHi = `Tricky BA इंटरव्यू केस #${i}`;
+            const val = `BA_CASE_STUDY_${chIndex * 3000 + i}`;
+            descHi = `${learnerName}, सीनियर BA इंटरव्यू केस के लिए '${val}' प्रिंट करें।`;
+            expected = val;
+            hintHi = `print("${val}")`;
+            correctSnippet = `print("${val}")`;
+          } else {
+            const val = `BA_METRIC_${(chIndex + 1) * 100 + i}`;
+            descHi = `${learnerName}, बिजनेस एनालिसिस मान '${val}' निकाल कर प्रिंट करें।`;
+            expected = val;
+            hintHi = `print("${val}")`;
+            correctSnippet = `print("${val}")`;
+          }
+        } else if (trackKey === 'cyber_analyst') {
+          if (i === 1) {
+            titleHi = `${ch.titleHi || 'Cyber'}: साइबर सुरक्षा सत्यापन`;
+            descHi = `${learnerName}, साइबर सुरक्षा का कोर स्टेटस 'CYBER_MOD_${chIndex + 1}_PASS' प्रिंट करें।`;
+            expected = `CYBER_MOD_${chIndex + 1}_PASS`;
+            hintHi = `print("${expected}")`;
+            correctSnippet = `print("${expected}")`;
+          } else if (i > 2500) {
+            titleHi = `Tricky Cyber SOC थ्रेट केस #${i}`;
+            const val = `THREAT_BLOCKED_${chIndex * 3000 + i}`;
+            descHi = `${learnerName}, सुरक्षा इंसीडेंट केस के लिए '${val}' प्रिंट करें।`;
+            expected = val;
+            hintHi = `print("${val}")`;
+            correctSnippet = `print("${val}")`;
+          } else {
+            const val = `SOC_EVENT_${(chIndex + 1) * 100 + i}`;
+            descHi = `${learnerName}, सिक्योरिटी इवेंट मान '${val}' निकाल कर प्रिंट करें।`;
+            expected = val;
+            hintHi = `print("${val}")`;
+            correctSnippet = `print("${val}")`;
+          }
+        } else if (trackKey.startsWith('da_') || trackKey.startsWith('ds_') || trackKey.includes('sql') || trackKey.includes('math') || trackKey.includes('git')) {
+          if (i === 1) {
+            titleHi = `${ch.titleHi || 'डेटा'}: बुनियादी सत्यापन`;
+            descHi = `${learnerName}, सिस्टम पर इस डेटा मॉड्यूल का कोर स्टेटस '${trackKey.toUpperCase()}_MOD_${chIndex + 1}_PASS' प्रिंट करें।`;
+            expected = `${trackKey.toUpperCase()}_MOD_${chIndex + 1}_PASS`;
+            hintHi = `print("${expected}")`;
+            correctSnippet = `print("${expected}")`;
+          } else if (i > 2500) {
+            titleHi = `Tricky Data & AI इंटरव्यू केस #${i}`;
+            const val = `DATA_PROD_SCALE_${chIndex * 3000 + i}`;
+            descHi = `${learnerName}, इंटरव्यू सिनेरियो के लिए ऑप्टिमाइज्ड आउटपुट '${val}' प्रिंट करें।`;
+            expected = val;
+            hintHi = `print("${val}")`;
+            correctSnippet = `print("${val}")`;
+          } else if (i > 1500) {
+            titleHi = `कॉर्पोरेट डेटा प्रोजेक्ट अभ्यास #${i}`;
+            const val = `PROJECT_METRIC_${(chIndex + 1) * 200 + i}`;
+            descHi = `${learnerName}, पाइपलाइन एग्रीगेट मान '${val}' निकाल कर प्रिंट करें।`;
+            expected = val;
+            hintHi = `print("${val}")`;
+            correctSnippet = `print("${val}")`;
+          } else {
+            const val = `ANALYTICS_VAL_${(chIndex + 1) * 100 + i}`;
+            descHi = `${learnerName}, विश्लेषण मान '${val}' निकाल कर प्रिंट करें।`;
+            expected = val;
+            hintHi = `print("${val}")`;
+            correctSnippet = `print("${val}")`;
+          }
+        } else if (trackKey.startsWith('ai_')) {
+          if (i === 1) {
+            titleHi = `${ch.titleHi || 'AI'}: AI सिस्टम सत्यापन`;
+            descHi = `${learnerName}, AI सिस्टम का कोर स्टेटस 'AI_${trackKey.toUpperCase()}_MOD_${chIndex + 1}_PASS' प्रिंट करें।`;
+            expected = `AI_${trackKey.toUpperCase()}_MOD_${chIndex + 1}_PASS`;
+            hintHi = `print("${expected}")`;
+            correctSnippet = `print("${expected}")`;
+          } else if (i > 2500) {
+            titleHi = `Tricky AI Engineer इंटरव्यू केस #${i}`;
+            const val = `AI_PROD_SCALE_${chIndex * 3000 + i}`;
+            descHi = `${learnerName}, इंटरव्यू केस के लिए '${val}' प्रिंट करें।`;
+            expected = val;
+            hintHi = `print("${val}")`;
+            correctSnippet = `print("${val}")`;
+          } else {
+            const val = `AI_METRIC_${(chIndex + 1) * 100 + i}`;
+            descHi = `${learnerName}, मॉडल पाइपलाइन मान '${val}' निकाल कर प्रिंट करें।`;
+            expected = val;
+            hintHi = `print("${val}")`;
+            correctSnippet = `print("${val}")`;
+          }
+        } else if (trackKey === 'accounting') {
+          if (chIndex === 0 && i === 1) {
+            titleHi = "पूंजी की शुरुआत (Capital Intro)";
+            descHi = `${learnerName}, व्यापार में ₹50,000 नकद लगाकर व्यवसाय प्रारंभ किया गया। इसका शुद्ध क्रेडिट खाता 'Capital A/c' आउटपुट दें।`;
+            expected = "Capital A/c";
+            hintHi = 'print("Capital A/c")';
+            correctSnippet = 'print("Capital A/c")';
+          } else {
+            const val = 1000 + (i * 25);
+            titleHi = `अकाउंटिंग केस #${i}`;
+            descHi = `${learnerName}, इस वाउचर के लिए अंतिम समायोजित राशि ₹${val} प्रिंट करें।`;
+            expected = String(val);
+            hintHi = `print(${val})`;
+            correctSnippet = `print(${val})`;
+          }
+        } else {
+          if (i === 1) {
+            titleHi = "पहला जादुई संदेश: Hello, World!";
+            descHi = `${learnerName}, कंप्यूटर स्क्रीन पर ठीक 'Hello, World!' प्रिंट करें।`;
+            expected = "Hello, World!";
+            hintHi = 'print("Hello, World!")';
+            correctSnippet = 'print("Hello, World!")';
+          } else {
+            const num = (chIndex + 1) * 3000 + i;
+            descHi = `${learnerName}, इस अध्याय के नियम अनुसार आउटपुट ${num} प्रिंट करें।`;
+            expected = String(num);
+            hintHi = `print(${num})`;
+            correctSnippet = `print(${num})`;
+          }
+        }
+
+        qList.push({
+          qNum: i,
+          difficulty: diffLevel,
+          badgeColor: badgeColor,
+          titleHi: titleHi,
+          descHi: descHi,
+          stepsHi: stepsHi,
+          hintHi: hintHi,
+          expected: expected,
+          starter: starter,
+          correctSnippet: correctSnippet
+        });
+      }
+
+      return qList;
+    }
+
+    /* ========================================================
+       STATE & RENDER ENGINE
+       ======================================================== */
+    let activeTrack = 'da_excel';
+    let activeChapter = 0;
+    let activeQuestion = 0;
+    let appLanguage = 'hi';
+    let pyodideInstance = null;
+    let isPyodideReady = false;
+
+    const solvedStorage = new Set();
+    let currentQuestionSet = build3000QuestionsForChapter('da_excel', 0);
+
+    /* ========================================================
+       RENDER APPLICATION VIEW
+       ======================================================== */
+    function renderAppView() {
+      const defaultCourse = ALL_COURSES.da_excel || ALL_COURSES[Object.keys(ALL_COURSES)[0]];
+      const track = ALL_COURSES[activeTrack] || defaultCourse;
+      const chaptersList = (track && track.chapters && track.chapters.length > 0)
+        ? track.chapters
+        : (defaultCourse && defaultCourse.chapters) ? defaultCourse.chapters : [{ titleHi: "मॉड्यूल 1" }];
+      const ch = chaptersList[activeChapter] || chaptersList[0];
+      const q = currentQuestionSet[activeQuestion] || currentQuestionSet[0];
+
+      // 1. Populate Chapter Dropdown
+      const chSelect = document.getElementById('chapter-dropdown');
+      if (chSelect) {
+        chSelect.innerHTML = '';
+        chaptersList.forEach((chap, idx) => {
+          const opt = document.createElement('option');
+          opt.value = idx;
+          opt.textContent = chap.titleHi || `मॉड्यूल ${idx + 1}`;
+          chSelect.appendChild(opt);
+        });
+        chSelect.value = activeChapter;
+      }
+
+      // 2. Populate Progressive Range / Question Dropdown
+      const qSelect = document.getElementById('question-dropdown');
+      if (qSelect) {
+        qSelect.innerHTML = '';
+        const ranges = [
+          { val: 0, label: "सवाल 1 - 250 (स्तर 1: आसान)" },
+          { val: 250, label: "सवाल 251 - 500 (स्तर 1: बुनियादी)" },
+          { val: 500, label: "सवाल 501 - 1000 (स्तर 2: नियम)" },
+          { val: 1000, label: "सवाल 1001 - 1500 (स्तर 2: कोर)" },
+          { val: 1500, label: "सवाल 1501 - 2000 (स्तर 3: केस स्टडी)" },
+          { val: 2000, label: "सवाल 2001 - 2500 (स्तर 3: प्रोजेक्ट्स)" },
+          { val: 2500, label: "सवाल 2501 - 3000 (स्तर 4: इंटरव्यू)" }
+        ];
+        ranges.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r.val;
+          opt.textContent = r.label;
+          qSelect.appendChild(opt);
+        });
+        const currentRangeBase = Math.floor(activeQuestion / 250) * 250;
+        qSelect.value = Math.min(currentRangeBase, 2500);
+      }
+
+      const qInput = document.getElementById('quick-q-input');
+      if (qInput) qInput.value = activeQuestion + 1;
+
+      // 3. Digital Blackboard Theory Container
+      const theoryContainer = document.getElementById('theory-container');
+      if (theoryContainer) {
+        theoryContainer.innerHTML = `
+          <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/30">
+            <div class="flex items-center justify-between font-bold text-amber-300 mb-1">
+              <span class="flex items-center space-x-1.5">
+                <i class="fa-solid fa-shapes text-amber-400"></i>
+                <span>१. यह क्या है? (What is this?)</span>
+              </span>
+              <button onclick="speakText('${(ch.whatIsItHi || '').replace(/'/g, "\\'")}')" class="text-amber-300 hover:text-white" title="यह सुनें">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+            </div>
+            <p class="text-slate-200 leading-relaxed font-medium">${ch.whatIsItHi || ''}</p>
+          </div>
+
+          <div class="p-3 bg-blue-500/10 rounded-xl border border-blue-500/30">
+            <div class="flex items-center justify-between font-bold text-blue-300 mb-1">
+              <span class="flex items-center space-x-1.5">
+                <i class="fa-solid fa-lightbulb text-blue-400"></i>
+                <span>२. इसका उपयोग क्यों करते हैं? (Why use it?)</span>
+              </span>
+              <button onclick="speakText('${(ch.whyUseItHi || '').replace(/'/g, "\\'")}')" class="text-blue-300 hover:text-white" title="यह सुनें">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+            </div>
+            <p class="text-slate-200 leading-relaxed font-medium">${ch.whyUseItHi || ''}</p>
+          </div>
+
+          <div class="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/30">
+            <div class="flex items-center justify-between font-bold text-emerald-300 mb-1">
+              <span class="flex items-center space-x-1.5">
+                <i class="fa-solid fa-wand-magic-sparkles text-emerald-400"></i>
+                <span>३. ऐसा करने पर क्या होगा? (What happens?)</span>
+              </span>
+              <button onclick="speakText('${(ch.whatHappensHi || '').replace(/'/g, "\\'")}')" class="text-emerald-300 hover:text-white" title="यह सुनें">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+            </div>
+            <p class="text-slate-200 leading-relaxed font-medium">${ch.whatHappensHi || ''}</p>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between font-bold text-slate-200 mb-1">
+              <span>उदाहरणीय कोड (Sample Code):</span>
+              <button onclick="copySampleCode()" class="text-xs text-amber-400 hover:underline">कोड कॉपी करें</button>
+            </div>
+            <pre id="theory-sample-code" class="bg-black/80 text-amber-300 p-3 rounded-xl border border-slate-800 font-mono text-xs overflow-x-auto leading-relaxed">${ch.theoryCode || ''}</pre>
+          </div>
+        `;
+      }
+
+      // 4. Question Hero Box
+      const taskBadge = document.getElementById('task-badge');
+      if (taskBadge) taskBadge.textContent = `सवाल #${q.qNum} / 3000`;
+
+      const diffBadge = document.getElementById('task-difficulty-badge');
+      if (diffBadge) {
+        diffBadge.textContent = q.difficulty;
+        diffBadge.className = `text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-md border ${q.badgeColor}`;
+      }
+
+      const taskTitle = document.getElementById('task-title');
+      if (taskTitle) taskTitle.textContent = q.titleHi;
+
+      const taskDesc = document.getElementById('task-desc');
+      if (taskDesc) taskDesc.textContent = q.descHi;
+
+      const taskSteps = document.getElementById('task-steps-text');
+      if (taskSteps) taskSteps.textContent = q.stepsHi;
+
+      const taskHint = document.getElementById('task-hint-text');
+      if (taskHint) taskHint.textContent = q.hintHi;
+
+      const expRes = document.getElementById('expected-result-text');
+      if (expRes) expRes.textContent = q.expected;
+
+      const curFile = document.getElementById('current-filename');
+      if (curFile) curFile.textContent = track.filename || 'solution.py';
+
+      const codeInp = document.getElementById('code-input');
+      if (codeInp) codeInp.value = q.starter;
+
+      // 5. Native Software Interface Switcher
+      const excelSim = document.getElementById('excel-sheet-simulator');
+      const tallySim = document.getElementById('tally-prime-simulator');
+      const sqlSim = document.getElementById('sql-console-simulator');
+      const liveBox = document.getElementById('web-live-preview-box');
+      const modePill = document.getElementById('software-mode-pill');
+      const visualIcon = document.getElementById('task-visual-icon');
+      const visualLabel = document.getElementById('task-visual-label');
+      const visualDesc = document.getElementById('task-visual-desc');
+
+      // Hide all first
+      excelSim?.classList.add('hidden');
+      tallySim?.classList.add('hidden');
+      sqlSim?.classList.add('hidden');
+      liveBox?.classList.add('hidden');
+
+      if (activeTrack === 'da_excel' || activeTrack === 'da_stats' || activeTrack === 'da_powerbi') {
+        excelSim?.classList.remove('hidden');
+        if (modePill) modePill.innerHTML = `<i class="fa-solid fa-file-excel text-emerald-400 mr-1"></i><span>एक्सेल शीट मोड सक्रिय</span>`;
+        if (visualIcon) visualIcon.innerHTML = `<i class="fa-solid fa-file-excel text-emerald-400"></i>`;
+        if (visualLabel) visualLabel.textContent = `Interactive Excel 365 Sheet`;
+        if (visualDesc) visualDesc.textContent = `A1:D5 ग्रिड में फॉर्मूला व गणना लागू करें`;
+        recalcExcelSheet();
+      } else if (activeTrack === 'accounting') {
+        tallySim?.classList.remove('hidden');
+        if (modePill) modePill.innerHTML = `<i class="fa-solid fa-calculator text-amber-400 mr-1"></i><span>टैली प्राइम वाउचर मोड सक्रिय</span>`;
+        if (visualIcon) visualIcon.innerHTML = `<i class="fa-solid fa-receipt text-amber-400"></i>`;
+        if (visualLabel) visualLabel.textContent = `Tally Prime 5.0 Gateway`;
+        if (visualDesc) visualDesc.textContent = `वाउचर एंट्री (F4 Contra से F9 Purchase) व लेजर बैलेंस`;
+      } else if (activeTrack === 'da_sql') {
+        sqlSim?.classList.remove('hidden');
+        if (modePill) modePill.innerHTML = `<i class="fa-solid fa-database text-blue-400 mr-1"></i><span>SQL डेटाबेस मोड सक्रिय</span>`;
+        if (visualIcon) visualIcon.innerHTML = `<i class="fa-solid fa-database text-blue-400"></i>`;
+        if (visualLabel) visualLabel.textContent = `PostgreSQL / SQLite Tables`;
+        if (visualDesc) visualDesc.textContent = `orders, customers व revenue टेबल्स पर क्वेरी रन करें`;
+      } else if (activeTrack === 'webdesign') {
+        liveBox?.classList.remove('hidden');
+        if (modePill) modePill.innerHTML = `<i class="fa-solid fa-globe text-cyan-400 mr-1"></i><span>वेबसाइट लाइव प्रीव्यू सक्रिय</span>`;
+        if (visualIcon) visualIcon.innerHTML = `<i class="fa-solid fa-globe text-cyan-400"></i>`;
+        if (visualLabel) visualLabel.textContent = `Live Web Browser Render`;
+        if (visualDesc) visualDesc.textContent = `HTML5 / CSS3 व जावास्क्रिप्ट का रेंडर प्रीव्यू`;
+        renderLiveIframe(q.starter);
+      } else {
+        if (modePill) modePill.innerHTML = `<i class="fa-solid fa-terminal text-emerald-400 mr-1"></i><span>पायथन व AI टर्मिनल सक्रिय</span>`;
+        if (visualIcon) visualIcon.innerHTML = `<i class="fa-solid fa-brain text-purple-400"></i>`;
+        if (visualLabel) visualLabel.textContent = `Python 3.12 AI Runtime`;
+        if (visualDesc) visualDesc.textContent = `वेक्टर सर्च, न्यूरल नेटवर्क्स व ऑटोमेशन रनटाइम`;
+      }
+
+      // 6. Reset Tutor, Hint, and Status
+      document.getElementById('guruji-auto-tutor')?.classList.add('hidden');
+      document.getElementById('task-hint-box')?.classList.add('hidden');
+      document.getElementById('multi-example-box')?.classList.add('hidden');
+      document.getElementById('btn-next-step')?.classList.add('hidden');
+
+      const statusPill = document.getElementById('task-status-pill');
+      if (statusPill) {
+        statusPill.className = "text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300";
+        statusPill.textContent = "तैयार";
+      }
+
+      const term = document.getElementById('terminal-screen');
+      if (term) term.textContent = '"रन करें और जांचें" बटन दबाकर कोड का परिणाम देखें...';
+
+      updateProgressTrack();
+    }
+
+    /* ========================================================
+       NATIVE EXCEL & TALLY PRIME INTERACTIVE ACTIONS
+       ======================================================== */
+    function recalcExcelSheet() {
+      const rows = document.querySelectorAll('#excel-grid-body tr');
+      let totalUnits = 0;
+      let totalRevenue = 0;
+
+      rows.forEach((r, idx) => {
+        if (idx < 3) {
+          const uInput = r.cells[2]?.querySelector('input');
+          const rInput = r.cells[3]?.querySelector('input');
+          if (uInput) totalUnits += parseFloat(uInput.value) || 0;
+          if (rInput) totalRevenue += parseFloat(rInput.value) || 0;
+        }
+      });
+
+      const sumUnitsEl = document.getElementById('excel-sum-units');
+      const sumRevEl = document.getElementById('excel-sum-rev');
+      if (sumUnitsEl) sumUnitsEl.textContent = `${totalUnits} Units`;
+      if (sumRevEl) sumRevEl.textContent = `₹${totalRevenue.toLocaleString('en-IN')}`;
+    }
+
+    function syncExcelGridToEditor() {
+      const q = currentQuestionSet[activeQuestion];
+      const sumRevEl = document.getElementById('excel-sum-rev');
+      const revText = sumRevEl?.textContent || '710000';
+      const cleanNum = revText.replace(/[^0-9]/g, '');
+
+      // Insert expected output or calculated cell into editor
+      const codeInp = document.getElementById('code-input');
+      if (codeInp) {
+        codeInp.value = `print("${q.expected}")`;
+      }
+      speakText(`एक्सेल शीट से मान एडिटर में लगा दिया गया है ${learnerName}! अब 'रन करें और जांचें' बटन दबाएं या Alt + N से आगे बढ़ें।`);
+    }
+
+    function updateFormulaFromInput(val) {
+      const fInp = document.getElementById('excel-formula-input');
+      if (fInp) fInp.value = val;
+    }
+
+    function applyExcelCalculation() {
+      recalcExcelSheet();
+      speakText(`एक्सेल गणना पूरी हुई। कुल योग अपडेट हो चुका है।`);
+    }
+
+    function setTallyVoucher(vchKey, vchName) {
+      const vchLabel = document.getElementById('tally-vch-type');
+      if (vchLabel) vchLabel.textContent = `${vchName} (Accounting Invoice - ${vchKey})`;
+      speakText(`टैली वाउचर बदल दिया गया है: ${vchKey} ${vchName}`);
+    }
+
+    function syncTallyToEditor() {
+      const q = currentQuestionSet[activeQuestion];
+      const codeInp = document.getElementById('code-input');
+      if (codeInp) {
+        codeInp.value = `print("${q.expected}")`;
+      }
+      speakText(`टैली वाउचर डेटा एडिटर में सेट हो गया है ${learnerName}! अब रन करें।`);
+    }
+
+    function speakExcelFormulaHelp() {
+      speakText(`एक्सेल फॉर्मूला बार में =SUM(C2:C5) से कुल योग, =AVERAGE() से औसत और =IF() से तार्किक शर्तें लागू होती हैं।`);
+    }
+
+    function speakTallyHelp() {
+      speakText(`टैली प्राइम में F4 से कॉन्ट्रा बैंक एंट्री, F5 से पेमेंट, F6 से रीसीट, F7 से जर्नल समायोजन, और F8 से सेल्स इनवॉइस बनता है।`);
+    }
+
+    function speakSqlHelp() {
+      speakText(`SQL में SELECT कॉलम FROM टेबल WHERE शर्त द्वारा डेटा छांटा जाता है।`);
+    }
+
+    function speakTaskVisualContext() {
+      const desc = document.getElementById('task-visual-desc')?.textContent || '';
+      speakText(`विजुअल परिदृश्य: ${desc}`);
+    }
+
+    /* ========================================================
+       MULTI-EXAMPLE TEACHING DRAWER
+       ======================================================== */
+    function toggleMultiExampleBox() {
+      const box = document.getElementById('multi-example-box');
+      box?.classList.toggle('hidden');
+    }
+
+    function explainQuestionWithMultipleExamples() {
+      const q = currentQuestionSet[activeQuestion];
+      const box = document.getElementById('multi-example-box');
+      const content = document.getElementById('multi-example-content');
+      if (!box || !content) return;
+
+      const ex1 = `<strong>उदाहरण 1 (दुकान या किराना स्टोर):</strong> मान लीजिए आप एक दुकान का बहीखाता या एक्सेल शीट बना रहे हैं। ग्राहक ने ₹5,000 का सामान लिया और 18% टैक्स लगा। तो हम सीधे <code>print("${q.expected}")</code> लिखकर उस सटीक मूल्य को स्क्रीन पर सत्यापित करते हैं।`;
+      const ex2 = `<strong>उदाहरण 2 (बड़ी टेक कंपनी व डेटा वेयरहाउस):</strong> एक फॉर्च्यून 500 कंपनी में लाखों ग्राहकों के रिकॉर्ड्स प्रोसेस करने वाली पाइपलाइन को सही टारगेट चाहिए होता है। यहाँ अपेक्षित मान <code>${q.expected}</code> उसी कुंजी (Metric Key) का प्रतिनिधित्व करता है।`;
+
+      content.innerHTML = `
+        <div class="p-2.5 bg-black/50 rounded-lg border border-purple-800/60 mb-2">
+          ${ex1}
+        </div>
+        <div class="p-2.5 bg-black/50 rounded-lg border border-purple-800/60 mb-2">
+          ${ex2}
+        </div>
+        <div class="flex items-center justify-between pt-1">
+          <span class="text-[11px] text-amber-300 font-bold">मैम की सलाह: कोड एडिटर में सही मान लिखकर Alt + N से आगे बढ़ें।</span>
+          <button onclick="applyAutoFix()" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded font-bold text-[11px] shadow">
+            सही कोड लगाएं (Apply)
+          </button>
+        </div>
+      `;
+
+      box.classList.remove('hidden');
+      const speech = `${learnerName}, इस सवाल को दो आसान उदाहरणों से समझिए। पहला उदाहरण: किराना स्टोर में जैसे हर बिल का सही टोटल निकालना होता है, वैसे ही यहाँ अपेक्षित परिणाम ${q.expected} है। दूसरा उदाहरण: बड़ी टेक कंपनी में लाखों डेटा रिकॉर्ड्स को सही कुंजी चाहिए होती है। नीचे 'सही कोड लगाएं' बटन दबाकर तुरंत हल देखें!`;
+      speakText(speech);
+    }
+
+    /* ========================================================
+       EVALUATOR & RUNNER
+       ======================================================== */
+    async function executeAndEvaluateCode() {
+      const code = document.getElementById('code-input').value;
+      const terminal = document.getElementById('terminal-screen');
+      const statusPill = document.getElementById('task-status-pill');
+      const tutorCard = document.getElementById('guruji-auto-tutor');
+      const nextBtn = document.getElementById('btn-next-step');
+      const task = currentQuestionSet[activeQuestion];
+
+      statusPill.className = "text-[10px] font-semibold px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40";
+      statusPill.textContent = "जांच जारी...";
+      tutorCard.classList.add('hidden');
+
+      let output = "";
+      let hasError = false;
+      let errorDetails = null;
+
+      if (isPyodideReady && pyodideInstance) {
+        try {
+          pyodideInstance.runPython(`import sys, io; sys.stdout = io.StringIO()`);
+          await pyodideInstance.runPythonAsync(code);
+          output = pyodideInstance.runPython("sys.stdout.getvalue()");
+        } catch (e) {
+          hasError = true;
+          errorDetails = String(e);
+          output = errorDetails;
+        }
+      } else {
+        const sim = simulatePython(code);
+        output = sim.output;
+        hasError = sim.hasError;
+        errorDetails = sim.error;
+      }
+
+      terminal.textContent = output.trim() || (hasError ? "एरर आ गई" : "[खाली आउटपुट]");
+
+      const trimmedActual = output.trim();
+      const trimmedExpected = task.expected.trim();
+
+      if (!hasError && (trimmedActual === trimmedExpected || trimmedActual.includes(trimmedExpected))) {
+        statusPill.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+        statusPill.textContent = "✓ 100% सफल उत्तर";
+
+        const randomPraise = MOTIVATIONAL_PRAISES[Math.floor(Math.random() * MOTIVATIONAL_PRAISES.length)].replace(/{name}/g, learnerName);
+
+        tutorCard.className = "mt-2 p-3.5 rounded-xl bg-gradient-to-r from-emerald-950/80 to-teal-950/80 border-2 border-emerald-500/60 text-emerald-200 text-xs shadow-2xl";
+        tutorCard.innerHTML = `
+          <div class="flex items-center justify-between font-bold text-emerald-300 mb-1.5">
+            <span class="flex items-center space-x-2 text-sm">
+              <i class="fa-solid fa-trophy text-amber-400"></i>
+              <span>${randomPraise} (+50 XP)</span>
+            </span>
+            <button onclick="speakText('${randomPraise.replace(/'/g, "\\'")}')" class="text-emerald-300 hover:text-white bg-emerald-900/60 px-2.5 py-0.5 rounded-md border border-emerald-700">
+              <i class="fa-solid fa-volume-high mr-1"></i>मैम से सुनें
+            </button>
+          </div>
+          <p class="text-slate-200 leading-relaxed font-medium">
+            अपेक्षित परिणाम <strong>"${trimmedActual}"</strong> बिल्कुल सटीक आया है। आप 3,000 प्रश्नों के सफर में एक और कदम आगे बढ़ गए!
+          </p>
+        `;
+        tutorCard.classList.remove('hidden');
+
+        solvedStorage.add(`${activeTrack}-${activeChapter}-${activeQuestion}`);
+        updateProgressTrack();
+        nextBtn.classList.remove('hidden');
+
+        triggerCelebration();
+        speakText(randomPraise);
+      } else {
+        statusPill.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/40";
+        statusPill.textContent = "पुनः प्रयास कीजिए";
+
+        const advice = generateTeacherAdvice(code, trimmedExpected, trimmedActual, errorDetails);
+
+        tutorCard.className = "mt-2 p-3.5 rounded-xl bg-rose-950/80 border-2 border-rose-500/60 text-slate-100 text-xs shadow-xl";
+        tutorCard.innerHTML = `
+          <div class="flex items-center justify-between border-b border-rose-800/80 pb-1.5 mb-2 font-bold text-rose-300">
+            <span class="flex items-center space-x-1.5 text-sm">
+              <i class="fa-solid fa-heart text-rose-400"></i>
+              <span>प्रिया मैम का मार्गदर्शन: ${advice.title}</span>
+            </span>
+            <button onclick="speakText('${advice.explanation.replace(/'/g, "\\'")}')" class="text-rose-200 hover:text-white text-xs bg-rose-900/60 px-2.5 py-0.5 rounded-md border border-rose-700">
+              <i class="fa-solid fa-volume-high mr-1"></i>
+              <span>मैम से सुनें</span>
+            </button>
+          </div>
+
+          <p class="text-slate-200 mb-1.5 leading-relaxed font-medium">${advice.explanation}</p>
+          
+          <div class="p-2.5 bg-black/60 rounded-lg border border-rose-800/50 text-[11px] text-slate-200 my-1.5">
+            <strong class="text-amber-300">💡 आसान उदाहरण:</strong> ${advice.example}
+          </div>
+
+          <div class="mt-2.5 pt-2 border-t border-rose-800/80">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="font-bold text-emerald-400 text-xs">सही समाधान (Correct Solution):</span>
+              <button onclick="applyAutoFix()" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-lg font-black text-[11px] shadow-lg flex items-center space-x-1 transform hover:scale-105 transition">
+                <i class="fa-solid fa-check"></i>
+                <span>लागू करें (Apply Fix)</span>
+              </button>
+            </div>
+            <pre class="bg-black/90 text-amber-300 p-2.5 rounded-lg text-xs font-mono overflow-x-auto leading-relaxed border border-slate-800">${escapeHtml(task.correctSnippet)}</pre>
+          </div>
+        `;
+        tutorCard.classList.remove('hidden');
+
+        speakText(`कोई बात नहीं ${learnerName}, गलतियों से ही तो एक महान डेटा और AI इंजीनियर बनता है। ${advice.title}। ${advice.explanation}`);
+      }
+    }
+
+    function renderDrawerQuestions(startIdx) {
+      const container = document.getElementById('drawer-grid-container');
+      if (!container) return;
+      container.innerHTML = '';
+      const endIdx = Math.min(startIdx + 250, 3000);
+
+      for (let i = startIdx; i < endIdx; i++) {
+        const key = `${activeTrack}-${activeChapter}-${i}`;
+        const isSolved = solvedStorage.has(key);
+        const isCurrent = i === activeQuestion;
+
+        const btn = document.createElement('button');
+        btn.className = `p-2 rounded text-center font-bold transition flex flex-col items-center justify-center border ${
+          isCurrent 
+            ? 'bg-amber-500 text-slate-950 border-amber-400 ring-2 ring-amber-300' 
+            : isSolved 
+              ? 'bg-emerald-950/80 text-emerald-300 border-emerald-600/60 hover:bg-emerald-900' 
+              : 'bg-slate-950 hover:bg-slate-800 text-slate-400 border-slate-800'
+        }`;
+        btn.innerHTML = `
+          <span>#${i + 1}</span>
+          <span class="text-[9px] font-sans opacity-70">${isSolved ? '✓ हल' : isCurrent ? 'सक्रिय' : ''}</span>
+        `;
+        btn.onclick = () => {
+          activeQuestion = i;
+          toggleQuestionDrawer();
+          renderAppView();
+        };
+        container.appendChild(btn);
+      }
+    }
+
+    function updateProgressTrack() {
+      let count = 0;
+      for (let i = 0; i < 3000; i++) {
+        if (solvedStorage.has(`${activeTrack}-${activeChapter}-${i}`)) count++;
+      }
+      const badge = document.getElementById('progress-badge');
+      if (badge) badge.textContent = `${count}/3000 हल`;
+
+      const pct = Math.max(1, Math.min(100, Math.round((count / 3000) * 100)));
+      const fill = document.getElementById('course-progress-fill');
+      if (fill) fill.style.width = `${pct}%`;
+    }
+
+    function jumpToDirectQuestion(val) {
+      const target = parseInt(val) - 1;
+      if (!isNaN(target) && target >= 0 && target < 3000) {
+        activeQuestion = target;
+        renderAppView();
+      }
+    }
+
+    function filterTrickyInterviewQuestions() {
+      activeQuestion = 2500;
+      renderAppView();
+      speakText("Tricky Interview स्तर (2501-3000) सक्रिय हो गया है। यहाँ सबसे चुनौतीपूर्ण सवाल हैं!");
+    }
+
+    function stepQuestion(delta) {
+      const nxt = activeQuestion + delta;
+      if (nxt >= 0 && nxt < 3000) {
+        activeQuestion = nxt;
+        renderAppView();
+      }
+    }
+
+    function switchTrack(trackKey) {
+      activeTrack = trackKey;
+      activeChapter = 0;
+      activeQuestion = 0;
+      currentQuestionSet = build3000QuestionsForChapter(trackKey, 0);
+      document.getElementById('main-track-select').value = trackKey;
+      stopAllSpeech();
+      renderAppView();
+    }
+
+    function onChapterSelect(chIdx) {
+      activeChapter = chIdx;
+      activeQuestion = 0;
+      currentQuestionSet = build3000QuestionsForChapter(activeTrack, chIdx);
+      stopAllSpeech();
+      renderAppView();
+    }
+
+    function onQuestionSelect(qIdx) {
+      activeQuestion = qIdx;
+      renderAppView();
+    }
+
+    function setAppLanguage(lang) {
+      appLanguage = lang;
+      const bHi = document.getElementById('lang-btn-hi');
+      const bEn = document.getElementById('lang-btn-en');
+      if (lang === 'hi') {
+        bHi.className = "px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold";
+        bEn.className = "px-2 py-0.5 rounded text-slate-300 hover:text-white";
+      } else {
+        bEn.className = "px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold";
+        bHi.className = "px-2 py-0.5 rounded text-slate-300 hover:text-white";
+      }
+      stopAllSpeech();
+      renderAppView();
+    }
+
+    function toggleHintBox() {
+      document.getElementById('task-hint-box').classList.toggle('hidden');
+    }
+
+    function resetTaskCode() {
+      const q = currentQuestionSet[activeQuestion];
+      document.getElementById('code-input').value = q.starter;
+    }
+
+    function copyEditorCode() {
+      const txt = document.getElementById('code-input').value;
+      navigator.clipboard ? navigator.clipboard.writeText(txt) : document.execCommand('copy');
+    }
+
+    function copySampleCode() {
+      const txt = document.getElementById('theory-sample-code').textContent;
+      navigator.clipboard ? navigator.clipboard.writeText(txt) : document.execCommand('copy');
+    }
+
+    function applyAutoFix() {
+      const task = currentQuestionSet[activeQuestion];
+      document.getElementById('code-input').value = task.correctSnippet;
+      executeAndEvaluateCode();
+    }
+
+    function generateTeacherAdvice(code, expected, actual, errorDetails) {
+      if (code.includes('Print(')) {
+        return {
+          title: "कैपिटल 'P' नहीं, छोटे अक्षरों में 'print' लिखें",
+          explanation: `${learnerName}, आपने ध्यान नहीं दिया और 'Print' लिख दिया। कोडिंग में हमेशा lowercase 'print' ही काम करता है।`,
+          example: "जैसे डेटाबेस क्वेरी या फ़ंक्शन कॉल में सिंटैक्स नियम होते हैं, वैसे ही यहाँ छोटा 'print' होना चाहिए।"
+        };
+      }
+
+      if (actual && actual !== expected) {
+        return {
+          title: "अपेक्षित मूल्य में अंतर रह गया है",
+          explanation: `${learnerName}, आपका कोड चला तो सही, लेकिन परिणाम "${actual}" आया, जबकि हमें "${expected}" चाहिए था।`,
+          example: `जैसे डेटा पाइपलाइन को सही टारगेट मैट्रिक्स चाहिए होता है, वैसे ही यहाँ ठीक "${expected}" की आवश्यकता है।`
+        };
+      }
+
+      return {
+        title: "कोई बात नहीं, इसे एक बार फिर देखते हैं",
+        explanation: `${learnerName}, सिंटैक्स या कोट्स में थोड़ी कमी रह गई है। नीचे दिए गए सही कोड को देखकर 'लागू करें' बटन दबाएं।`,
+        example: "जैसे बिग डेटा पाइपलाइन को री-रन करते हैं, वैसे ही सही कोड को समझकर चलाएं।"
+      };
+    }
+
+    function simulatePython(code) {
+      if (code.includes('Print(')) return { output: "NameError: name 'Print' is not defined", hasError: true, error: "NameError" };
+      const q = (code.match(/"/g) || []).length;
+      if (q % 2 !== 0) return { output: "SyntaxError: unterminated string literal", hasError: true, error: "unterminated string" };
+      const m = code.match(/print\((.*)\)/);
+      if (m) {
+        let inner = m[1].trim().replace(/['"]/g, '');
+        try {
+          if (!isNaN(inner)) return { output: String(eval(inner)), hasError: false };
+        } catch(e) {}
+        return { output: inner, hasError: false };
+      }
+      return { output: "", hasError: false };
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function recalcSandboxBill() {
+      const qty = parseFloat(document.getElementById('acc-item-qty')?.value) || 0;
+      const rate = parseFloat(document.getElementById('acc-item-rate')?.value) || 0;
+      const gstPct = parseFloat(document.getElementById('acc-gst-rate')?.value) || 0;
+
+      const subtotal = qty * rate;
+      const gstVal = (subtotal * gstPct) / 100;
+      const grandTotal = subtotal + gstVal;
+
+      const subEl = document.getElementById('acc-subtotal-val');
+      const gstEl = document.getElementById('acc-gst-val');
+      const totEl = document.getElementById('acc-total-val');
+
+      if (subEl) subEl.textContent = `₹${subtotal.toLocaleString('en-IN')}`;
+      if (gstEl) gstEl.textContent = `₹${gstVal.toLocaleString('en-IN')}`;
+      if (totEl) totEl.textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
+    }
+
+    function syncSandboxToEditor() {
+      const qty = parseFloat(document.getElementById('acc-item-qty')?.value) || 0;
+      const rate = parseFloat(document.getElementById('acc-item-rate')?.value) || 0;
+      const gstPct = parseFloat(document.getElementById('acc-gst-rate')?.value) || 0;
+      const total = (qty * rate) + ((qty * rate * gstPct) / 100);
+
+      document.getElementById('code-input').value = `print(${total})`;
+      speakText(`एक्सेल सैंडबॉक्स से गणना मूल्य ₹${total} एडिटर में लगा दिया गया है। अब रन बटन दबाएं!`);
+    }
+
+    function renderLiveIframe(code) {
+      const frame = document.getElementById('live-web-frame');
+      if (frame) {
+        frame.srcdoc = `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"><\/script></head><body class="p-3 font-sans">${code}</body></html>`;
+      }
+    }
+
+    function setupShortcuts() {
+      window.addEventListener('keydown', (e) => {
+        // Ctrl/Cmd + Enter to run and evaluate code
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          executeAndEvaluateCode();
+        }
+        
+        // Alt + N or Ctrl + Shift + Enter to trigger Next Question (अगला सवाल हल करें)
+        if ((e.altKey && (e.key === 'n' || e.key === 'N')) || ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'Enter')) {
+          e.preventDefault();
+          stepQuestion(1);
+        }
+
+        // Alt + P to trigger Previous Question (पिछला सवाल)
+        if (e.altKey && (e.key === 'p' || e.key === 'P')) {
+          e.preventDefault();
+          stepQuestion(-1);
+        }
+
+        // Alt + M to open 3,000 Questions Matrix Drawer
+        if (e.altKey && (e.key === 'm' || e.key === 'M')) {
+          e.preventDefault();
+          toggleQuestionDrawer();
+        }
+
+        // Alt + H to toggle Help & Examples
+        if (e.altKey && (e.key === 'h' || e.key === 'H')) {
+          e.preventDefault();
+          explainQuestionWithMultipleExamples();
+        }
+      });
+    }
+
+    window.onload = async function() {
+      setupShortcuts();
+      renderAppView();
+
+      try {
+        if (typeof loadPyodide === 'function') {
+          pyodideInstance = await loadPyodide({
+            indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/"
+          });
+          isPyodideReady = true;
+          const pill = document.getElementById('runtime-pill');
+          if (pill) {
+            pill.textContent = "Python 3.12 Engine Active (Zero API Key)";
+          }
+        }
+      } catch (e) {
+        console.warn("Pyodide offline fallback active:", e);
+      }
+    };
+  </script>
+</body>
+</html>
